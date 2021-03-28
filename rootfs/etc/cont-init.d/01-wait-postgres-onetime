@@ -1,0 +1,5 @@
+#!/usr/bin/with-contenv bash
+
+until PGPASSWORD=${DB_PASS} pg_isready -h ${DB_HOST} -U ${DB_USER}; do
+    sleep 1
+done
