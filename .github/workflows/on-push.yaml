@@ -1,0 +1,36 @@
+name: Build and push docker images
+
+on:
+  push:
+    paths:
+      - .github/workflows/on-push.yaml
+      - .github/.trigger_on_push
+      - Dockerfile.*
+      - builds/*
+      - rootfs/*
+      - hook/*
+    branches:
+      - master
+      # - dev
+
+jobs:
+  build:
+    name: Build and push images to DockerHub
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository oupfiz5/openacs-s6
+        uses: actions/checkout@v2
+
+      - name: Login to DockerHub Registry
+        run: |
+          echo  ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+
+      - name: Build images
+        run: |
+          cd ${GITHUB_WORKSPACE}/hook
+          ./build-msteps.sh
+
+      - name: Push images
+        run: |
+          cd ${GITHUB_WORKSPACE}/hook
+          ./push.sh
