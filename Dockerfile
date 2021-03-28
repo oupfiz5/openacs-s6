@@ -6,7 +6,7 @@ ARG OACS_VERSION=5.9.1
 
 # * Environment
 ENV oacs_version=${OACS_VERSION} \
-    NS_CONF="/usr/local/ns/conf/openacs-config.tcl"
+    NS_CONF="/usr/local/ns/conf/openacs_config.tcl"
 
 # * Labels
 LABEL \
@@ -39,7 +39,7 @@ RUN tar xzf /tmp/openacs-${oacs_version}-core.tar.gz -C /var/www; \
     rm /tmp/openacs-${oacs_version}-core.tar.gz
 
 # ** Copy openacs configuration files
-COPY rootfs/usr/local/ns/conf/openacs-config.tcl /usr/local/ns/conf/openacs-config.tcl
+COPY rootfs/usr/local/ns/conf/openacs_config.tcl /usr/local/ns/conf/openacs_config.tcl
 COPY rootfs/usr/local/ns/conf/config_vars.tcl /usr/local/ns/conf/config_vars.tcl
 COPY rootfs/var/www/openacs/www/SYSTEM/openacs-test.tcl /var/www/openacs/www/SYSTEM/openacs-test.tcl
 
