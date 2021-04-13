@@ -48,7 +48,7 @@ This is [OpenACS](https://openacs.org/) on [ubuntu base docker image](https://hu
 
 OpenACS-S6 is self-hosting at <https://chiselapp.com/user/oupfiz5/repository/openacs-s6>.
 
-If you are reading this on GitHub, then you are looking at a Git mirror of the self-hosting OpenACS-S6 repository.  The purpose of that mirror is to test and exercise Fossil's ability to export a Git mirror and using Github CI/CD  (Github Actions). Nobody much uses the GitHub mirror, except to verify that the mirror logic works. If you want to know more about OpenACS-S6, visit the official self-hosting site linked above.
+If you are reading this on GitHub, then you are looking at a Git mirror of the self-hosting OpenACS-S6 repository.  The purpose of that mirror is to test and exercise Fossil's ability to export a Git mirror and using GitHub CI/CD (GitHub Actions). Nobody much uses the GitHub mirror, except to verify that the mirror logic works. If you want to know more about OpenACS-S6, visit the official self-hosting site linked above.
 
 
 <a id="org88b0f79"></a>
@@ -77,6 +77,7 @@ Clone repository from:
         mkdir openacs-s6
         cd openacs-s6
         fossil open ../openacs-s6.fossil
+
 -   GitHub:
 
         git clone https://github.com/oupfiz5/openacs-s6.git
@@ -294,7 +295,7 @@ Logs tail:
 <tr>
 <td class="org-left"><a href="#org3677b85">DB_HOST</a></td>
 <td class="org-left">postgres</td>
-<td class="org-left">Database host name</td>
+<td class="org-left">Database hostname</td>
 </tr>
 </tbody>
 
@@ -302,7 +303,7 @@ Logs tail:
 <tr>
 <td class="org-left"><a href="#orgc66d635">DB_USER</a></td>
 <td class="org-left">openacs</td>
-<td class="org-left">Database user name</td>
+<td class="org-left">Database username</td>
 </tr>
 </tbody>
 
@@ -380,7 +381,7 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
 
 ## Database host
 
-`DB_HOST` set the database host name for the openacs. By default it has name of docker-compose database  service - postgres.
+`DB_HOST` set the database hostname for the openacs. By default it has name of docker-compose database  service - postgres.
 
     DB_HOST=foo docker-compose up
 
@@ -389,7 +390,7 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
 
 ## Database user
 
-`DB_USER` set the database user name for the openacs and postgres.
+`DB_USER` set the database username for the openacs and postgres.
 
     DB_USER=foouser docker-compose up
 
@@ -425,7 +426,7 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
 
 # CI/CD
 
-For  build and push docker images we use  [Github Actions workflow](https://github.com/oupfiz5/openacs-s6/blob/master/.github/workflows/on-push.yaml).
+For build and push docker images we use [GitHub Actions workflow](https://github.com/oupfiz5/openacs-s6/blob/master/.github/workflows/on-push.yaml).
 
 
 <a id="orgb97b270"></a>
@@ -446,7 +447,7 @@ For  build and push docker images we use  [Github Actions workflow](https://gith
 
 <a id="orgceca637"></a>
 
-## Build from github
+## Build from GitHub
 
     git clone https://github.com/oupfiz5/openacs-s6.git
     cd openacs-s6
@@ -490,9 +491,9 @@ For  build and push docker images we use  [Github Actions workflow](https://gith
 
 <tbody>
 <tr>
-<td class="org-left">OACS_VERSION</td>
-<td class="org-left">5.9.1</td>
-<td class="org-left">Set deafaul OpenACS version</td>
+<td class="org-left">OACS_TAG</td>
+<td class="org-left">oacs-5-10</td>
+<td class="org-left">Set default OpenACS version (source code tag)</td>
 </tr>
 </tbody>
 </table>
@@ -504,8 +505,8 @@ For  build and push docker images we use  [Github Actions workflow](https://gith
 
     docker build --no-cache \
         --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
-        --build-arg OACS_VERSION="5.9.1" \
-        -t oupfiz5/openacs-s6:5.9.1 \
+        --build-arg OACS_TAG="oacs-5-10" \
+        -t oupfiz5/openacs-s6:oacs-5-10 \
         -t oupfiz5/openacs-s6:latest \
         -f ../Dockerfile \
         ../.
