@@ -20,8 +20,8 @@
     -   [General options](#org26e31e0)
     -   [Timezone](#orgea60235)
     -   [OpenACS listen port](#orgc5ccb5a)
-    -   [Naviserver configuration file](#org5ab4ae1)
-    -   [Naviserver variable file](#org2c5463b)
+    -   [NaviServer configuration file](#org5ab4ae1)
+    -   [NaviServer variable file](#org2c5463b)
     -   [Database host](#org3677b85)
     -   [Database user](#orgc66d635)
     -   [Database password](#org07056a9)
@@ -30,7 +30,7 @@
 -   [CI/CD](#org13d1110)
 -   [Build docker image](#orgb97b270)
     -   [Build from chiselapp (fossil)](#org2692764)
-    -   [Build from github](#orgceca637)
+    -   [Build from GitHub](#orgceca637)
     -   [Contfiguration](#org9b2dc88)
         -   [Build arguments](#orga161785)
         -   [Example of build](#org4ee9344)
@@ -44,7 +44,7 @@
 
 # About
 
-This is [OpenACS](https://openacs.org/) on [ubuntu base docker image](https://hub.docker.com/_/ubuntu) (version 20.04) using [s6-overlay](https://github.com/just-containers/s6-overlay).  For install the OpenACS was used some code from  [Gustaf Neumann](https://github.com/gustafn/install-ns) script [install-oacs.sh](https://github.com/gustafn/install-ns/blob/master/install-oacs.sh). The base image is [oupfiz5/openacs-s6](https://hub.docker.com/r/oupfiz5/openacs-s6).
+This is [OpenACS](https://openacs.org/) on [Ubuntu base docker image](https://hub.docker.com/_/ubuntu) (version 20.04) using [s6-overlay](https://github.com/just-containers/s6-overlay).  For install the OpenACS was used some code from  [Gustaf Neumann](https://github.com/gustafn/install-ns) script [install-oacs.sh](https://github.com/gustafn/install-ns/blob/master/install-oacs.sh). The base image is [oupfiz5/openacs-s6](https://hub.docker.com/r/oupfiz5/openacs-s6).
 
 OpenACS-S6 is self-hosting at <https://chiselapp.com/user/oupfiz5/repository/openacs-s6>.
 
@@ -279,7 +279,7 @@ Logs tail:
 <tr>
 <td class="org-left"><a href="#org5ab4ae1">NS_CONF</a></td>
 <td class="org-left">openacs_config.tcl</td>
-<td class="org-left">Configuration file for Naviserver</td>
+<td class="org-left">Configuration file for NaviServer</td>
 </tr>
 </tbody>
 
@@ -287,7 +287,7 @@ Logs tail:
 <tr>
 <td class="org-left"><a href="#org2c5463b">NS_VARS</a></td>
 <td class="org-left">config_vars.tcl</td>
-<td class="org-left">Variable file for Naviserver</td>
+<td class="org-left">Variable file for NaviServer</td>
 </tr>
 </tbody>
 
@@ -355,7 +355,7 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
 
 <a id="org5ab4ae1"></a>
 
-## Naviserver configuration file
+## NaviServer configuration file
 
 `NS_CONF` - configuration file. Default value is `/usr/local/ns/conf/openacs-config.tcl`
 
@@ -367,9 +367,13 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
 
 <a id="org2c5463b"></a>
 
-## Naviserver variable file
+## NaviServer variable file
 
-`NS_VARS` - configuration file. Default value is `/usr/local/ns/conf/config_vars.tcl` Using for debug, configure etc.
+`NS_VARS` - configuration file. This configuration file contains
+several parameters which are frequently changed (e.g. for debug or other
+configurations). The provided NaviServer configuation file reads the
+variable file and uses its values.
+Default value is `/usr/local/ns/conf/config_vars.tcl`
 
 1.  Put the configuration file to `rootfs/usr/local/ns/conf`
 2.  Run docker compose
