@@ -39,10 +39,20 @@ RUN mkdir /var/www/openacs/log/
 RUN chown -R nsadmin:nsadmin /var/www/openacs
 RUN rm /tmp/${OACS_TAG}.tar.gz
 
+# * Install -bootstrap3-theme
+ADD https://github.com/openacs/openacs-bootstrap3-theme/archive/${OACS_TAG}.tar.gz /tmp/openacs-bootstrap3-theme-${OACS_TAG}.tar.gz
+
+RUN tar xzf /tmp/openacs-bootstrap3-theme-${OACS_TAG}.tar.gz -C /var/www/openacs/packages
+RUN mv /var/www/openacs/packages/openacs-bootstrap3-theme-${OACS_TAG} /var/www/openacs/packages/openacs-bootstrap3-theme
+RUN rm /tmp/openacs-bootstrap3-theme-${OACS_TAG}.tar.gz
+
 # ** Copy openacs configuration files
 COPY rootfs/usr/local/ns/conf/openacs_config.tcl /usr/local/ns/conf/openacs_config.tcl
 COPY rootfs/usr/local/ns/conf/config_vars.tcl /usr/local/ns/conf/config_vars.tcl
 COPY rootfs/var/www/openacs/www/SYSTEM/openacs-test.tcl /var/www/openacs/www/SYSTEM/openacs-test.tcl
+
+# ** Install extra OpenACS packages
+COPY rootfs/usr/local/ns/conf/install-oacs-core-config.xml /var/www/openacs/install.xml
 
 # * Change directory
 WORKDIR /var/www/openacs
