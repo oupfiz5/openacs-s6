@@ -2,10 +2,10 @@
 FROM oupfiz5/naviserver-s6:latest
 
 # * Arguments
-ARG OACS_VERSION=5.9.1
+ARG OACS_TAG=oacs-5-10
 
 # * Environment
-ENV oacs_version=${OACS_VERSION} \
+ENV oacs_tag=${OACS_TAG} \
     NS_CONF="/usr/local/ns/conf/openacs_config.tcl"
 
 # * Labels
@@ -21,9 +21,9 @@ LABEL \
     org.opencontainers.image.vendor="" \
     org.opencontainers.image.licenses="" \
     org.opencontainers.image.ref.name="" \
-    org.opencontainers.image.title="OpenACS on naviserver docker image using s6-overlay" \
-    org.opencontainers.image.description="OpenACS on naviserver  docker image using s6-overlay" \
-    custom.package.version.openacs=${OACS_VERSION}
+    org.opencontainers.image.title="OpenACS on Naviserver docker image using s6-overlay" \
+    org.opencontainers.image.description="OpenACS on Naviserver  docker image using s6-overlay" \
+    custom.package.version.openacs=${OACS_TAG}
 
 # * Copy S6 configuration files
 COPY rootfs/etc /etc/
@@ -31,17 +31,28 @@ COPY rootfs/etc /etc/
 # * Install OpenACS
 RUN mkdir -p /var/www
 
-ADD https://openacs.org/projects/openacs/download/download/openacs-${oacs_version}-core.tar.gz /tmp/openacs-${oacs_version}-core.tar.gz
+ADD https://github.com/openacs/openacs-core/archive/${OACS_TAG}.tar.gz /tmp/${OACS_TAG}.tar.gz
 
-RUN tar xzf /tmp/openacs-${oacs_version}-core.tar.gz -C /var/www; \
-    mv /var/www/openacs-${oacs_version} /var/www/openacs; \
+RUN tar xzf /tmp/${OACS_TAG}.tar.gz -C /var/www; \
+    mv /var/www/openacs-core-${OACS_TAG} /var/www/openacs; \
+    mkdir /var/www/openacs/log/; \
     chown -R nsadmin:nsadmin /var/www/openacs; \
-    rm /tmp/openacs-${oacs_version}-core.tar.gz
+    rm /tmp/${OACS_TAG}.tar.gz
+
+# ** Install openacs-bootstrap3-theme
+ADD https://github.com/openacs/openacs-bootstrap3-theme/archive/${OACS_TAG}.tar.gz /tmp/openacs-bootstrap3-theme-${OACS_TAG}.tar.gz
+
+RUN tar xzf /tmp/openacs-bootstrap3-theme-${OACS_TAG}.tar.gz -C /var/www/openacs/packages; \
+    mv /var/www/openacs/packages/openacs-bootstrap3-theme-${OACS_TAG} /var/www/openacs/packages/openacs-bootstrap3-theme; \
+    rm /tmp/openacs-bootstrap3-theme-${OACS_TAG}.tar.gz
 
 # ** Copy openacs configuration files
 COPY rootfs/usr/local/ns/conf/openacs_config.tcl /usr/local/ns/conf/openacs_config.tcl
 COPY rootfs/usr/local/ns/conf/config_vars.tcl /usr/local/ns/conf/config_vars.tcl
 COPY rootfs/var/www/openacs/www/SYSTEM/openacs-test.tcl /var/www/openacs/www/SYSTEM/openacs-test.tcl
+
+# ** Install and configure extra OpenACS packages
+COPY rootfs/usr/local/ns/conf/install-oacs-core-config.xml /var/www/openacs/install.xml
 
 # * Change directory
 WORKDIR /var/www/openacs

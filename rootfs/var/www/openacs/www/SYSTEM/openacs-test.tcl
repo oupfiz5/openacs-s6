@@ -13,14 +13,20 @@ ad_page_contract {
     @cvs-id $Id: dbtest.tcl,v 1.2 2009/11/17 22:26:13 ryang Exp $
 } { }
 
-if { [catch {
-    db_foreach check_pool1 "select 1 from party_names limit 1" {
-        db_foreach check_pool2 "select 1 from party_names limit 1" {
-            db_1row check_pool3 "select 1 from party_names limit 1"
+
+try {
+    if {![ad_verify_install]} {
+        ns_log notice "Installation is not complete"
+    } else {
+        db_foreach check_pool1 "select 1 from acs_objects limit 1" {
+            db_foreach check_pool2 "select 1 from acs_objects limit 1" {
+                db_1row check_pool3 "select 1 from acs_objects limit 1"
+            }
         }
     }
-} errmsg] } {
+} on error {errorMsg} {
+    ns_log warning "monitoring: openacs-test runs into an error: $errorMsg"
     ns_return 500 text/plain "1"
-} else {
+} on ok {result} {
     ns_return 200 text/plain "0"
 }
