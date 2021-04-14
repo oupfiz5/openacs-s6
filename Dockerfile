@@ -21,8 +21,8 @@ LABEL \
     org.opencontainers.image.vendor="" \
     org.opencontainers.image.licenses="" \
     org.opencontainers.image.ref.name="" \
-    org.opencontainers.image.title="OpenACS on Naviserver docker image using s6-overlay" \
-    org.opencontainers.image.description="OpenACS on Naviserver  docker image using s6-overlay" \
+    org.opencontainers.image.title="OpenACS on NaviServer docker image using s6-overlay" \
+    org.opencontainers.image.description="OpenACS on NaviServer docker image using s6-overlay" \
     custom.package.version.openacs=${OACS_TAG}
 
 # * Copy S6 configuration files

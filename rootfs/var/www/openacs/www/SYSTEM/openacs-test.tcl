@@ -30,3 +30,9 @@ try {
 } on ok {result} {
     ns_return 200 text/plain "0"
 }
+
+# Local variables:
+#    mode: tcl
+#    tcl-indent-level: 4
+#    indent-tabs-mode: nil
+# End:

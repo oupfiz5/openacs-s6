@@ -77,6 +77,7 @@ Clone repository from:
         mkdir openacs-s6
         cd openacs-s6
         fossil open ../openacs-s6.fossil
+
 -   GitHub:
 
         git clone https://github.com/oupfiz5/openacs-s6.git
@@ -268,7 +269,7 @@ Logs tail:
 
 <tbody>
 <tr>
-<td class="org-left"><a href="#org9cacc36">OA_LISTEN_PORT</a></td>
+<td class="org-left"><a href="#org9cacc36">OACS_LISTEN_PORT</a></td>
 <td class="org-left">8080</td>
 <td class="org-left">Set http listen port, example 8080</td>
 </tr>
@@ -294,7 +295,7 @@ Logs tail:
 <tr>
 <td class="org-left"><a href="#orgc3fd0e5">DB_HOST</a></td>
 <td class="org-left">postgres</td>
-<td class="org-left">Database host name</td>
+<td class="org-left">Database hostname</td>
 </tr>
 </tbody>
 
@@ -302,7 +303,7 @@ Logs tail:
 <tr>
 <td class="org-left"><a href="#orgd53467b">DB_USER</a></td>
 <td class="org-left">openacs</td>
-<td class="org-left">Database user name</td>
+<td class="org-left">Database username</td>
 </tr>
 </tbody>
 
@@ -347,9 +348,9 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
 
 ## OpenACS listen port
 
-`OA_LISTEN_PORT` set the http listen port for the openacs.  In this case the OpenACS is accessible by URL [http://localhost:8070](http://localhost:8070).
+`OACS_LISTEN_PORT` set the http listen port for the openacs.  In this case the OpenACS is accessible by URL [http://localhost:8070](http://localhost:8070).
 
-    OA_LISTEN_PORT=8070 docker-compose up
+    OACS_LISTEN_PORT=8070 docker-compose up
 
 
 <a id="org020e20c"></a>
@@ -492,7 +493,7 @@ For  build and push docker images we use  [GitHub Actions workflow](https://gith
 <tr>
 <td class="org-left">OACS_TAG</td>
 <td class="org-left">oacs-5-10</td>
-<td class="org-left">Set default OpenACS version</td>
+<td class="org-left">Set default OpenACS version (source code tag)</td>
 </tr>
 </tbody>
 </table>
@@ -518,7 +519,7 @@ For  build and push docker images we use  [GitHub Actions workflow](https://gith
 You can download docker images from dockerhub:
 
     docker pull oupfiz5/openacs-s6:latest
-    docker pull oupfiz5/openacs-s6:5.10
+    docker pull oupfiz5/openacs-s6:oacs-5-10
 
 
 <a id="org669e971"></a>
