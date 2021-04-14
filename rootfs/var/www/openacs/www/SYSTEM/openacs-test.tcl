@@ -13,6 +13,7 @@ ad_page_contract {
     @cvs-id $Id: dbtest.tcl,v 1.2 2009/11/17 22:26:13 ryang Exp $
 } { }
 
+
 try {
     if {![ad_verify_install]} {
         ns_log notice "Installation is not complete"

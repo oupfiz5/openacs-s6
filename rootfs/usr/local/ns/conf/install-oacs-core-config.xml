@@ -6,12 +6,12 @@
 
   <actions>
     <install package="openacs-bootstrap3-theme"/>
-    
+
     <set-parameter package-key="acs-subsite" name="DefaultMaster" value="tabbed-master"/>
     <set-parameter package-key="acs-subsite" name="StreamingHead" value="tabbed-streaming-head"/>
     <set-parameter package-key="acs-subsite" name="ThemeKey" value="openacs_bootstrap3"/>
 
-    <set-parameter package-key="acs-subsite" name="ResourceDir" value="/packages/openacs-bootstrap3-theme/resources"/> 
+    <set-parameter package-key="acs-subsite" name="ResourceDir" value="/packages/openacs-bootstrap3-theme/resources"/>
 
     <set-parameter package-key="acs-subsite" name="ThemeCSS" value="{-href /resources/acs-subsite/site-master.css -media all -order 0}
                 {-href urn:ad:css:bootstrap3 -media all -order 1}
@@ -23,7 +23,7 @@
     <set-parameter package-key="acs-subsite" name="ThemeJS" value="{-src urn:ad:js:jquery -order 1}
                 {-src urn:ad:js:bootstrap3 -order 2}" />
 
-<!-- We could mount automaticall additional packages; some packages need to be mounted, before configuration option can be added 
+<!-- We could mount automaticall additional packages; some packages need to be mounted, before configuration option can be added
     <mount package="..." mount-point="..." instance-name="..."/>
 -->
 
