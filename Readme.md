@@ -1,46 +1,46 @@
 # Table of Contents
 
--   [About](#org17e4a79)
--   [Quickstart](#org20068ab)
-    -   [Manage OpenACS using docker-compose.yaml](#org131dd59)
-        -   [Prerequisite](#org8335fce)
-        -   [Start/stop interactive](#org4e5cca2)
-        -   [Start/stop/remove as daemon](#org849eb74)
-        -   [View logs](#orgdc96e0a)
-        -   [View list containers](#orgba0430d)
-        -   [Prune all](#orgb658cf2)
-    -   [Manage OpenACS using docker-compose-official-db.yaml](#org60c953a)
-        -   [Prerequisite](#org8cc2d94)
-        -   [Start/stop interactive](#org5b698f4)
-        -   [Start/stop/remove as daemon](#org0570ce5)
-        -   [View logs](#orgbd81a2f)
-        -   [View list containers](#orgce63f61)
-        -   [Prune all](#org9fa241b)
--   [Configuration options](#org4f165d8)
-    -   [General options](#org429565c)
-    -   [Timezone](#orgd4ed9a1)
-    -   [OpenACS listen port](#org440a918)
-    -   [NaviServer configuration file](#org5b5fb68)
-    -   [NaviServer variable file](#org4ec2272)
-    -   [Database hostname](#orgc7cc3b5)
-    -   [Database username](#orgf98ec45)
-    -   [Database password](#org13169bf)
-    -   [Postgres official tag](#org82a23e6)
-    -   [Postgres datacore tag](#orgea0d53f)
--   [CI/CD](#org7c131c9)
--   [Build docker image](#orgf199f95)
-    -   [Build from chiselapp (fossil)](#org4af1f8e)
-    -   [Build from GitHub](#org1da89ca)
-    -   [Contfiguration](#org4a7aa5c)
-        -   [Build arguments](#orga3e2a5c)
-        -   [Example of build](#org8c8aa18)
--   [Download from DockerHub](#org880370c)
--   [Maintenance](#org8c7ab92)
-    -   [Shell access](#org745158e)
+-   [About](#orgd9522a0)
+-   [Quickstart](#orgd0bd276)
+    -   [Manage OpenACS using docker-compose.yaml](#orgecce5d7)
+        -   [Prerequisite](#orgdfca233)
+        -   [Start/stop interactive](#org7220c79)
+        -   [Start/stop/remove as daemon](#orgb91f5fb)
+        -   [View logs](#org09fd99b)
+        -   [View list containers](#orgb7add66)
+        -   [Prune all](#orgac70790)
+    -   [Manage OpenACS using docker-compose-official-db.yaml](#org0138f01)
+        -   [Prerequisite](#org422377d)
+        -   [Start/stop interactive](#org10ad621)
+        -   [Start/stop/remove as daemon](#orgd172168)
+        -   [View logs](#org2c47563)
+        -   [View list containers](#org27dce33)
+        -   [Prune all](#orgfc22acc)
+-   [Configuration options](#orgb38d744)
+    -   [General options](#orgf88e009)
+    -   [Timezone](#org17a2aa6)
+    -   [OpenACS listen port](#orgb97fba3)
+    -   [NaviServer configuration file](#org1969e90)
+    -   [NaviServer variable file](#org47ce901)
+    -   [Database hostname](#orgb8ad5d5)
+    -   [Database username](#orgf2dffd0)
+    -   [Database password](#org798ebdb)
+    -   [Postgres official tag](#org2510baf)
+    -   [Postgres datacore tag](#orge3a3a4c)
+-   [CI/CD](#org1ce8b26)
+-   [Build docker image](#orgb91acab)
+    -   [Build from chiselapp (fossil)](#org07c0317)
+    -   [Build from GitHub](#orgc7c14a1)
+    -   [Contfiguration](#orgd1b11dd)
+        -   [Build arguments](#org4e55480)
+        -   [Example of build](#org698399d)
+-   [Download from DockerHub](#orgb663d11)
+-   [Maintenance](#org812f17a)
+    -   [Shell access](#orgc88cd6c)
 
 
 
-<a id="org17e4a79"></a>
+<a id="orgd9522a0"></a>
 
 # About
 
@@ -51,21 +51,21 @@ OpenACS-S6 is self-hosting at <https://chiselapp.com/user/oupfiz5/repository/ope
 If you are reading this on GitHub, then you are looking at a Git mirror of the self-hosting OpenACS-S6 repository.  The purpose of that mirror is to test and exercise Fossil's ability to export a Git mirror and using GitHub CI/CD  (GitHub Actions). Nobody much uses the GitHub mirror, except to verify that the mirror logic works. If you want to know more about OpenACS-S6, visit the official self-hosting site linked above.
 
 
-<a id="org20068ab"></a>
+<a id="orgd0bd276"></a>
 
 # Quickstart
 
 The quickstart contains two variants:
 
 
-<a id="org131dd59"></a>
+<a id="orgecce5d7"></a>
 
 ## Manage OpenACS using docker-compose.yaml
 
 We use postgres image from [datacore/postgresql](https://hub.docker.com/r/datacore/postgresql) in docker-compose.yaml file.
 
 
-<a id="org8335fce"></a>
+<a id="orgdfca233"></a>
 
 ### Prerequisite
 
@@ -83,7 +83,7 @@ Clone repository from:
         cd openacs-s6
 
 
-<a id="org4e5cca2"></a>
+<a id="org7220c79"></a>
 
 ### Start/stop interactive
 
@@ -98,7 +98,7 @@ stop:
     <Ctrl>+C
 
 
-<a id="org849eb74"></a>
+<a id="orgb91f5fb"></a>
 
 ### Start/stop/remove as daemon
 
@@ -117,7 +117,7 @@ remove:
     docker-compose rm
 
 
-<a id="orgdc96e0a"></a>
+<a id="org09fd99b"></a>
 
 ### View logs
 
@@ -130,28 +130,28 @@ Logs tail:
     docker-compose logs --tail=10
 
 
-<a id="orgba0430d"></a>
+<a id="orgb7add66"></a>
 
 ### View list containers
 
     docker-compose ps
 
 
-<a id="orgb658cf2"></a>
+<a id="orgac70790"></a>
 
 ### Prune all
 
     docker system prune --volumes --force
 
 
-<a id="org60c953a"></a>
+<a id="org0138f01"></a>
 
 ## Manage OpenACS using docker-compose-official-db.yaml
 
 We use [official posgres](https://hub.docker.com/_/postgres) image in docker-compose-official-db.yaml file.
 
 
-<a id="org8cc2d94"></a>
+<a id="org422377d"></a>
 
 ### Prerequisite
 
@@ -170,7 +170,7 @@ Clone repository from:
         cd openacs-s6
 
 
-<a id="org5b698f4"></a>
+<a id="org10ad621"></a>
 
 ### Start/stop interactive
 
@@ -185,7 +185,7 @@ stop:
     <Ctrl>+C
 
 
-<a id="org0570ce5"></a>
+<a id="orgd172168"></a>
 
 ### Start/stop/remove as daemon
 
@@ -204,7 +204,7 @@ remove:
     docker-compose -f docker-compose-official-db.yaml rm
 
 
-<a id="orgbd81a2f"></a>
+<a id="org2c47563"></a>
 
 ### View logs
 
@@ -217,26 +217,26 @@ Logs tail:
     docker-compose logs --tail=10
 
 
-<a id="orgce63f61"></a>
+<a id="org27dce33"></a>
 
 ### View list containers
 
     docker-compose ps
 
 
-<a id="org9fa241b"></a>
+<a id="orgfc22acc"></a>
 
 ### Prune all
 
     docker system prune --volumes --force
 
 
-<a id="org4f165d8"></a>
+<a id="orgb38d744"></a>
 
 # Configuration options
 
 
-<a id="org429565c"></a>
+<a id="orgf88e009"></a>
 
 ## General options
 
@@ -260,7 +260,7 @@ Logs tail:
 
 <tbody>
 <tr>
-<td class="org-left"><a href="#orgd4ed9a1">TZ</a></td>
+<td class="org-left"><a href="#org17a2aa6">TZ</a></td>
 <td class="org-left">UTC</td>
 <td class="org-left">Set timezone, example Europe/Moscow</td>
 </tr>
@@ -268,7 +268,7 @@ Logs tail:
 
 <tbody>
 <tr>
-<td class="org-left"><a href="#org440a918">OACS_LISTEN_PORT</a></td>
+<td class="org-left"><a href="#orgb97fba3">OA_LISTEN_PORT</a></td>
 <td class="org-left">8080</td>
 <td class="org-left">Set http listen port, example 8080</td>
 </tr>
@@ -276,7 +276,7 @@ Logs tail:
 
 <tbody>
 <tr>
-<td class="org-left"><a href="#org5b5fb68">NS_CONF</a></td>
+<td class="org-left"><a href="#org1969e90">NS_CONF</a></td>
 <td class="org-left">openacs_config.tcl</td>
 <td class="org-left">Configuration file for NaviServer</td>
 </tr>
@@ -284,7 +284,7 @@ Logs tail:
 
 <tbody>
 <tr>
-<td class="org-left"><a href="#org4ec2272">NS_VARS</a></td>
+<td class="org-left"><a href="#org47ce901">NS_VARS</a></td>
 <td class="org-left">config_vars.tcl</td>
 <td class="org-left">Variable file for NaviServer</td>
 </tr>
@@ -292,7 +292,7 @@ Logs tail:
 
 <tbody>
 <tr>
-<td class="org-left"><a href="#orgc7cc3b5">DB_HOST</a></td>
+<td class="org-left"><a href="#orgb8ad5d5">DB_HOST</a></td>
 <td class="org-left">postgres</td>
 <td class="org-left">Database host name</td>
 </tr>
@@ -300,7 +300,7 @@ Logs tail:
 
 <tbody>
 <tr>
-<td class="org-left"><a href="#orgf98ec45">DB_USER</a></td>
+<td class="org-left"><a href="#orgf2dffd0">DB_USER</a></td>
 <td class="org-left">openacs</td>
 <td class="org-left">Database user name</td>
 </tr>
@@ -308,7 +308,7 @@ Logs tail:
 
 <tbody>
 <tr>
-<td class="org-left"><a href="#org13169bf">DB_PASS</a></td>
+<td class="org-left"><a href="#org798ebdb">DB_PASS</a></td>
 <td class="org-left">testing</td>
 <td class="org-left">Database user password</td>
 </tr>
@@ -316,7 +316,7 @@ Logs tail:
 
 <tbody>
 <tr>
-<td class="org-left"><a href="#org82a23e6">POSTGRES_OFFICIAL_TAG</a></td>
+<td class="org-left"><a href="#org2510baf">POSTGRES_OFFICIAL_TAG</a></td>
 <td class="org-left">10-alpine</td>
 <td class="org-left">Docker tag from official postgres.</td>
 </tr>
@@ -324,7 +324,7 @@ Logs tail:
 
 <tbody>
 <tr>
-<td class="org-left"><a href="#orgea0d53f">POSTGRES_DATACORE_TAG</a></td>
+<td class="org-left"><a href="#orge3a3a4c">POSTGRES_DATACORE_TAG</a></td>
 <td class="org-left">10.12</td>
 <td class="org-left">Docker tag from datacore/postgresql</td>
 </tr>
@@ -334,7 +334,7 @@ Logs tail:
 All options have predifined values and store in file `.env` .
 
 
-<a id="orgd4ed9a1"></a>
+<a id="org17a2aa6"></a>
 
 ## Timezone
 
@@ -343,16 +343,16 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
     TZ="Europe/Moscow" docker-compose up
 
 
-<a id="org440a918"></a>
+<a id="orgb97fba3"></a>
 
 ## OpenACS listen port
 
-`OACS_LISTEN_PORT` set the http listen port for the openacs.  In this case the OpenACS is accessible by URL [http://localhost:8070](http://localhost:8070).
+`OA_LISTEN_PORT` set the http listen port for the openacs.  In this case the OpenACS is accessible by URL [http://localhost:8070](http://localhost:8070).
 
-    OACS_LISTEN_PORT=8070 docker-compose up
+    OA_LISTEN_PORT=8070 docker-compose up
 
 
-<a id="org5b5fb68"></a>
+<a id="org1969e90"></a>
 
 ## NaviServer configuration file
 
@@ -364,7 +364,7 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
     NS_CONF="/usr/local/ns/conf/my-config.tcl" docker-compose up
 
 
-<a id="org4ec2272"></a>
+<a id="org47ce901"></a>
 
 ## NaviServer variable file
 
@@ -376,7 +376,7 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
     NS_VARS="/usr/local/ns/conf/my_vars.tcl" docker-compose up
 
 
-<a id="orgc7cc3b5"></a>
+<a id="orgb8ad5d5"></a>
 
 ## Database hostname
 
@@ -385,7 +385,7 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
     DB_HOST=foo docker-compose up
 
 
-<a id="orgf98ec45"></a>
+<a id="orgf2dffd0"></a>
 
 ## Database username
 
@@ -394,7 +394,7 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
     DB_USER=foouser docker-compose up
 
 
-<a id="org13169bf"></a>
+<a id="org798ebdb"></a>
 
 ## Database password
 
@@ -403,7 +403,7 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
     DB_PASS=foopass docker-compose up
 
 
-<a id="org82a23e6"></a>
+<a id="org2510baf"></a>
 
 ## Postgres official tag
 
@@ -412,7 +412,7 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
     POSTGRES_OFFICIAL_TAG="10.16-alpine" docker-compose up
 
 
-<a id="orgea0d53f"></a>
+<a id="orge3a3a4c"></a>
 
 ## Postgres datacore tag
 
@@ -421,19 +421,19 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
     POSTGRES_OFFICIAL_TAG="10.12" docker-compose up
 
 
-<a id="org7c131c9"></a>
+<a id="org1ce8b26"></a>
 
 # CI/CD
 
 For  build and push docker images we use  [GitHub Actions workflow](https://github.com/oupfiz5/openacs-s6/blob/master/.github/workflows/on-push.yaml).
 
 
-<a id="orgf199f95"></a>
+<a id="orgb91acab"></a>
 
 # Build docker image
 
 
-<a id="org4af1f8e"></a>
+<a id="org07c0317"></a>
 
 ## Build from chiselapp (fossil)
 
@@ -444,7 +444,7 @@ For  build and push docker images we use  [GitHub Actions workflow](https://gith
     docker build -t oupfiz5/openacs-s6 -f ./Dockerfile .
 
 
-<a id="org1da89ca"></a>
+<a id="orgc7c14a1"></a>
 
 ## Build from GitHub
 
@@ -453,12 +453,12 @@ For  build and push docker images we use  [GitHub Actions workflow](https://gith
     docker build -t oupfiz5/openacs-s6 -f ./Dockerfile .
 
 
-<a id="org4a7aa5c"></a>
+<a id="orgd1b11dd"></a>
 
 ## Contfiguration
 
 
-<a id="orga3e2a5c"></a>
+<a id="org4e55480"></a>
 
 ### Build arguments
 
@@ -498,7 +498,7 @@ For  build and push docker images we use  [GitHub Actions workflow](https://gith
 </table>
 
 
-<a id="org8c8aa18"></a>
+<a id="org698399d"></a>
 
 ### Example of build
 
@@ -511,7 +511,7 @@ For  build and push docker images we use  [GitHub Actions workflow](https://gith
         ../.
 
 
-<a id="org880370c"></a>
+<a id="orgb663d11"></a>
 
 # Download from DockerHub
 
@@ -521,12 +521,12 @@ You can download docker images from dockerhub:
     docker pull oupfiz5/openacs-s6:oacs-5-10
 
 
-<a id="org8c7ab92"></a>
+<a id="org812f17a"></a>
 
 # Maintenance
 
 
-<a id="org745158e"></a>
+<a id="orgc88cd6c"></a>
 
 ## Shell access
 
