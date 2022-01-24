@@ -3,6 +3,7 @@ version: '3.9'
 services:
   openacs:
     image: oupfiz5/openacs-s6:latest
+    restart: always
     env_file:
       - .env
     volumes:
@@ -13,13 +14,18 @@ services:
     ports:
       - ${OACS_LISTEN_PORT}:8000
     healthcheck:
-      test: ["CMD-SHELL", "wget -qO - http://localhost:8000/SYSTEM/openacs-test || exit 1"]
+      test: ["CMD-SHELL", "wget -qO - http://localhost:${OACS_LISTEN_PORT}/SYSTEM/openacs-test || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 2
 
   postgres:
-    image: datacore/postgresql:${POSTGRES_DATACORE_TAG}
+    image: postgres:14.1-alpine
+    restart: always
+    environment:
+        POSTGRES_PASSWORD: testing
+        POSTGRES_USER: openacs
+        POSTGRES_DB: openacs
     env_file:
       - .env
     ports:
