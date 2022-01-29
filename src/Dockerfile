@@ -1,9 +1,8 @@
 # * From
-FROM oupfiz5/naviserver-s6:latest
+FROM oupfiz5/naviserver-s6:4.99.23
 
 # * Arguments
-ARG OACS_TAG
-# ARG OACS_TAG=oacs-5-10
+ARG OACS_TAG=oacs-5-10
 
 # * Environment
 ENV oacs_tag=${OACS_TAG} \
@@ -17,7 +16,7 @@ LABEL \
     org.opencontainers.image.url="https://chiselapp.com/user/oupfiz5/repository/openacs-s6/home" \
     org.opencontainers.image.documentation="https://chiselapp.com/user/oupfiz5/repository/openacs-s6/wiki" \
     org.opencontainers.image.source="https://chiselapp.com/user/oupfiz5/repository/openacs-s6/brlist" \
-    org.opencontainers.image.version="0.0.2d" \
+    org.opencontainers.image.version="0.0.3d" \
     org.opencontainers.image.revision="" \
     org.opencontainers.image.vendor="" \
     org.opencontainers.image.licenses="" \

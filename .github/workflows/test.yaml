@@ -1,0 +1,81 @@
+name: Tests
+
+# * Controls
+# Controls when the action will run.
+on:
+  push:
+    paths:
+      - '.github/workflows/*'
+      - '.github/*'
+      - 'src/Dockerfile'
+      - 'src/rootfs/**'
+      - 'src/hook/*'
+      - 'src/*.sh'
+      - 'tests/**'
+    branches-ignore:
+      - 'master'
+      - 'main'
+  pull_request:
+    paths:
+      - '.github/workflows/*'
+      - '.github/*'
+      - 'src/Dockerfile'
+      - 'src/rootfs/**'
+      - 'src/hook/*'
+      - 'src/*.sh'
+      - 'tests/**'
+    branches-ignore:
+      - 'master'
+      - 'main'
+  workflow_dispatch:
+
+# * Environments
+env:
+  CONTAINER_NAME: "openacs-s6"
+  IMAGE_NAME: "openacs-s6"
+  IMAGE_TAG: "${{ github.sha }}"
+  REPOSITORY: "oupfiz5"
+
+# * Jobs
+jobs:
+  checks:
+    name: Checks
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Repo checkout
+        uses: actions/checkout@v2
+
+      # - name: Check shell files (shellcheck)
+      #   run: |
+      #     sudo apt-get update -y
+      #     sudo apt-get install shellcheck
+      #     cd ${GITHUB_WORKSPACE}/tests
+      #     .bats-battery/bats-core/bin/bats 01.shellchecks.bats
+
+      # - name: Check Dockerfile (hadolint)
+      #   run: |
+      #     cd ${GITHUB_WORKSPACE}/tests
+      #     .bats-battery/bats-core/bin/bats 02.dockerfile_check.bats
+
+      - name: Build image
+        run: |
+          cd ${GITHUB_WORKSPACE}/src
+          set -a; source VERSION ; set +a;
+          export IMAGE="${REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}"
+          docker build \
+          --build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+          -t "${IMAGE}" \
+          -f ./Dockerfile \
+          .
+
+      # - name: Check docker image (dockle)
+      #   run: |
+      #     cd ${GITHUB_WORKSPACE}/tests
+      #     export IMAGE="${REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}"
+      #     .bats-battery/bats-core/bin/bats 03.docker_image_check.bats
+
+      # - name: Check docker container
+      #   run: |
+      #     cd ${GITHUB_WORKSPACE}/tests
+      #     export IMAGE="${REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}"
+      #     .bats-battery/bats-core/bin/bats 04.container_check.bats
