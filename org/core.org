@@ -620,44 +620,55 @@ VERSION='oacs-5-10'
 :CUSTOM_ID: ----github-workflows-on-push-yaml
 :END:
 #+begin_src yaml :shebang ""
-  name: Build and push docker images
+    name: Build and push docker images
 
-  on:
-    push:
-      paths:
-        - .github/workflows/on-push.yaml
-        - .github/.trigger_on_push
-        - Dockerfile*
-        - builds/*
-        - .env
-        - rootfs/*
-        - hook/*
-        - VERSION
-      branches:
-        - master
-        - dev
+    on:
+      push:
+        branches:
+          - master
+          - main
+        paths:
+          - '.github/workflows/*'
+          - '.github/*'
+          - 'src/Dockerfile'
+          - 'src/rootfs/*'
+          - 'src/hook/*'
+          - 'src/*.sh'
+          - 'tests/**'
+      pull_request:
+        branches:
+          - master
+          - main
+        paths:
+          - '.github/workflows/*'
+          - '.github/*'
+          - 'src/Dockerfile'
+          - 'src/rootfs/*'
+          - 'src/hook/*'
+          - 'src/*.sh'
+          - 'tests/**'
 
-  jobs:
-    build:
-      name: Build and push images to DockerHub
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout repository oupfiz5/openacs-s6
-          uses: actions/checkout@v2
+    jobs:
+      build:
+        name: Build and push image to dockerhub
+        runs-on: ubuntu-latest
+        steps:
+          - name: Repo checkout
+            uses: actions/checkout@v2
 
-        - name: Login to DockerHub Registry
-          run: |
-            echo  ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          - name: Login to DockerHub Registry
+            run: |
+              echo  ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-        - name: Build images
-          run: |
-            cd ${GITHUB_WORKSPACE}/hook
-            ./build.sh
+          - name: Build images
+            run: |
+              cd ${GITHUB_WORKSPACE}/src/hook
+              ./build.sh
 
-        - name: Push images
-          run: |
-            cd ${GITHUB_WORKSPACE}/hook
-            ./push.sh
+          - name: Push images
+            run: |
+              cd ${GITHUB_WORKSPACE}/src/hook
+              ./push.sh
 #+end_src
 ** ../.github/workflows/test.yaml :code:
 :PROPERTIES:
