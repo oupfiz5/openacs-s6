@@ -1,5 +1,6 @@
 # * From
-FROM oupfiz5/naviserver-s6:4.99.23
+ARG NS_IMAGE_TAG=4.99.23
+FROM oupfiz5/naviserver-s6:${NS_IMAGE_TAG}
 
 # * Arguments
 ARG BUILD_DATE \
