@@ -70,29 +70,6 @@ If you are reading this on GitHub, then you are looking at a Git mirror of the s
 - [[#cicd][CI/CD]]
 - [[#maintenance][Maintenance]]
   - [[#shell-access][Shell access]]
-- [[#code][Code]]
-  - [[#version][VERSION]]
-  - [[#fossil-settingscrlf-glob][../.fossil-settings/crlf-glob]]
-  - [[#fossil-settingscrlf-globno-warn][../.fossil-settings/crlf-glob.no-warn]]
-  - [[#fossil-settingsignore-glob][../.fossil-settings/ignore-glob]]
-  - [[#fossil-settingscrlf-glob-1][../.fossil-settings/crlf-glob]]
-  - [[#githubworkflowson-pushyaml][../.github/workflows/on-push.yaml]]
-  - [[#githubworkflowstestyaml][../.github/workflows/test.yaml]]
-  - [[#githubtrigger_on_push][../.github/.trigger_on_push]]
-  - [[#gitignore][../.gitignore]]
-  - [[#dockerfile][Dockerfile]]
-  - [[#rootfsetccont-initd01-wait-postgres-onetime][rootfs/etc/cont-init.d/01-wait-postgres-onetime]]
-  - [[#rootfsetcservicesdnaviserverrun][rootfs/etc/services.d/naviserver/run]]
-  - [[#rootfsusrlocalnsconfopenacs_configtcl][rootfs/usr/local/ns/conf/openacs_config.tcl]]
-  - [[#rootfsusrlocalnsconfconfig_varstcl][rootfs/usr/local/ns/conf/config_vars.tcl]]
-  - [[#rootfsvarwwwopenacswwwsystemopenacs-testtcl][rootfs/var/www/openacs/www/SYSTEM/openacs-test.tcl]]
-  - [[#rootfsusrlocalnsconfinstall-oacs-core-configxml][rootfs/usr/local/ns/conf/install-oacs-core-config.xml]]
-  - [[#hookbuildsh][hook/build.sh]]
-  - [[#hookpushsh][hook/push.sh]]
-  - [[#docker-compose-datacoreyaml][docker-compose-datacore.yaml]]
-  - [[#docker-compose-official-dbyaml][docker-compose-official-db.yaml]]
-  - [[#docker-composeyaml][docker-compose.yaml]]
-  - [[#env][.env]]
 
 * Prerequisite
 :PROPERTIES:
@@ -594,7 +571,7 @@ docker exec -it openacs-s6_openacs_1 /bin/bash
 docker exec -it openacs-s6_postgres_1 /bin/bash
 #+end_example
 
-* Code :code:
+* Code :code:noexport:
 :PROPERTIES:
 :CUSTOM_ID: code
 :END:
@@ -774,7 +751,7 @@ VERSION='oacs-5-10'
 :CUSTOM_ID: ----github--trigger-on-push
 :END:
 #+begin_src yaml :shebang ""
-Trigger: 9
+Trigger: 10
 #+end_src
 ** ../.gitignore :code:
 :PROPERTIES:
