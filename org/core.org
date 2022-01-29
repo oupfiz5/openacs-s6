@@ -70,29 +70,6 @@ If you are reading this on GitHub, then you are looking at a Git mirror of the s
 - [[#cicd][CI/CD]]
 - [[#maintenance][Maintenance]]
   - [[#shell-access][Shell access]]
-- [[#code][Code]]
-  - [[#version][VERSION]]
-  - [[#fossil-settingscrlf-glob][../.fossil-settings/crlf-glob]]
-  - [[#fossil-settingscrlf-globno-warn][../.fossil-settings/crlf-glob.no-warn]]
-  - [[#fossil-settingsignore-glob][../.fossil-settings/ignore-glob]]
-  - [[#fossil-settingscrlf-glob-1][../.fossil-settings/crlf-glob]]
-  - [[#githubworkflowson-pushyaml][../.github/workflows/on-push.yaml]]
-  - [[#githubworkflowstestyaml][../.github/workflows/test.yaml]]
-  - [[#githubtrigger_on_push][../.github/.trigger_on_push]]
-  - [[#gitignore][../.gitignore]]
-  - [[#dockerfile][Dockerfile]]
-  - [[#rootfsetccont-initd01-wait-postgres-onetime][rootfs/etc/cont-init.d/01-wait-postgres-onetime]]
-  - [[#rootfsetcservicesdnaviserverrun][rootfs/etc/services.d/naviserver/run]]
-  - [[#rootfsusrlocalnsconfopenacs_configtcl][rootfs/usr/local/ns/conf/openacs_config.tcl]]
-  - [[#rootfsusrlocalnsconfconfig_varstcl][rootfs/usr/local/ns/conf/config_vars.tcl]]
-  - [[#rootfsvarwwwopenacswwwsystemopenacs-testtcl][rootfs/var/www/openacs/www/SYSTEM/openacs-test.tcl]]
-  - [[#rootfsusrlocalnsconfinstall-oacs-core-configxml][rootfs/usr/local/ns/conf/install-oacs-core-config.xml]]
-  - [[#hookbuildsh][hook/build.sh]]
-  - [[#hookpushsh][hook/push.sh]]
-  - [[#docker-compose-datacoreyaml][docker-compose-datacore.yaml]]
-  - [[#docker-compose-official-dbyaml][docker-compose-official-db.yaml]]
-  - [[#docker-composeyaml][docker-compose.yaml]]
-  - [[#env][.env]]
 
 * Prerequisite
 :PROPERTIES:
@@ -594,7 +571,7 @@ docker exec -it openacs-s6_openacs_1 /bin/bash
 docker exec -it openacs-s6_postgres_1 /bin/bash
 #+end_example
 
-* Code :code:
+* Code :code:noexport:
 :PROPERTIES:
 :CUSTOM_ID: code
 :END:
@@ -603,7 +580,7 @@ docker exec -it openacs-s6_postgres_1 /bin/bash
 :CUSTOM_ID: version
 :END:
 #+begin_src sh :shebang ""
-VERSION='oacs-5-10'
+VERSION='oacs-5-10-1'
 #+end_src
 ** ../.fossil-settings/crlf-glob :code:
 :PROPERTIES:
@@ -643,44 +620,55 @@ VERSION='oacs-5-10'
 :CUSTOM_ID: ----github-workflows-on-push-yaml
 :END:
 #+begin_src yaml :shebang ""
-  name: Build and push docker images
+    name: Build and push docker images
 
-  on:
-    push:
-      paths:
-        - .github/workflows/on-push.yaml
-        - .github/.trigger_on_push
-        - Dockerfile*
-        - builds/*
-        - .env
-        - rootfs/*
-        - hook/*
-        - VERSION
-      branches:
-        - master
-        - dev
+    on:
+      push:
+        branches:
+          - master
+          - main
+        paths:
+          - '.github/workflows/*'
+          - '.github/*'
+          - 'src/Dockerfile'
+          - 'src/rootfs/*'
+          - 'src/hook/*'
+          - 'src/*.sh'
+          - 'tests/**'
+      pull_request:
+        branches:
+          - master
+          - main
+        paths:
+          - '.github/workflows/*'
+          - '.github/*'
+          - 'src/Dockerfile'
+          - 'src/rootfs/*'
+          - 'src/hook/*'
+          - 'src/*.sh'
+          - 'tests/**'
 
-  jobs:
-    build:
-      name: Build and push images to DockerHub
-      runs-on: ubuntu-latest
-      steps:
-        - name: Checkout repository oupfiz5/openacs-s6
-          uses: actions/checkout@v2
+    jobs:
+      build:
+        name: Build and push image to dockerhub
+        runs-on: ubuntu-latest
+        steps:
+          - name: Repo checkout
+            uses: actions/checkout@v2
 
-        - name: Login to DockerHub Registry
-          run: |
-            echo  ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
+          - name: Login to DockerHub Registry
+            run: |
+              echo  ${{ secrets.DOCKERHUB_TOKEN }} | docker login --username ${{ secrets.DOCKERHUB_USERNAME }} --password-stdin
 
-        - name: Build images
-          run: |
-            cd ${GITHUB_WORKSPACE}/hook
-            ./build.sh
+          - name: Build images
+            run: |
+              cd ${GITHUB_WORKSPACE}/src/hook
+              ./build.sh
 
-        - name: Push images
-          run: |
-            cd ${GITHUB_WORKSPACE}/hook
-            ./push.sh
+          - name: Push images
+            run: |
+              cd ${GITHUB_WORKSPACE}/src/hook
+              ./push.sh
 #+end_src
 ** ../.github/workflows/test.yaml :code:
 :PROPERTIES:
@@ -774,7 +762,7 @@ VERSION='oacs-5-10'
 :CUSTOM_ID: ----github--trigger-on-push
 :END:
 #+begin_src yaml :shebang ""
-Trigger: 9
+Trigger: 10
 #+end_src
 ** ../.gitignore :code:
 :PROPERTIES:
@@ -794,13 +782,15 @@ Trigger: 9
   FROM oupfiz5/naviserver-s6:4.99.23
 
   # * Arguments
-  ARG OACS_TAG=oacs-5-10
+  ARG BUILD_DATE \
+      OACS_TAG=oacs-5-10
 
   # * Environment
   ENV oacs_tag=${OACS_TAG} \
       NS_CONF="/usr/local/ns/conf/openacs_config.tcl"
 
   # * Labels
+  # hadolint ignore=DL3048
   LABEL \
       maintainer="Oupfiz V <oupfiz5@yandex.ru>" \
       org.opencontainers.image.created="${BUILD_DATE}" \
