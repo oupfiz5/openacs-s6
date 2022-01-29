@@ -782,13 +782,15 @@ Trigger: 10
   FROM oupfiz5/naviserver-s6:4.99.23
 
   # * Arguments
-  ARG OACS_TAG=oacs-5-10
+  ARG BUILD_DATE \
+      OACS_TAG=oacs-5-10
 
   # * Environment
   ENV oacs_tag=${OACS_TAG} \
       NS_CONF="/usr/local/ns/conf/openacs_config.tcl"
 
   # * Labels
+  # hadolint ignore=DL3048
   LABEL \
       maintainer="Oupfiz V <oupfiz5@yandex.ru>" \
       org.opencontainers.image.created="${BUILD_DATE}" \
