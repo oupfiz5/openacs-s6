@@ -580,7 +580,7 @@ docker exec -it openacs-s6_postgres_1 /bin/bash
 :CUSTOM_ID: version
 :END:
 #+begin_src sh :shebang ""
-VERSION='oacs-5-10'
+VERSION='oacs-5-10-1'
 #+end_src
 ** ../.fossil-settings/crlf-glob :code:
 :PROPERTIES:
