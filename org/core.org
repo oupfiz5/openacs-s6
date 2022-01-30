@@ -35,7 +35,7 @@ If you are reading this on GitHub, then you are looking at a Git mirror of the s
     - [[#build-arguments][Build arguments]]
     - [[#example-of-build][Example of build]]
 - [[#quickstart][Quickstart]]
-  - [[#manage-openacs-using-docker-compose-dbyaml][Manage OpenACS using docker-compose-db.yaml]]
+  - [[#manage-openacs-using-docker-composeyaml][Manage OpenACS using docker-compose.yaml]]
     - [[#prerequisite-1][Prerequisite]]
     - [[#startstop-interactive][Start/stop interactive]]
     - [[#startstopremove-as-daemon][Start/stop/remove as daemon]]
@@ -163,11 +163,11 @@ You can download docker images from dockerhub:
 :CUSTOM_ID: quickstart
 :END:
 The quickstart contains two variants:
-** Manage OpenACS using docker-compose-db.yaml
+** Manage OpenACS using docker-compose.yaml
 :PROPERTIES:
-:CUSTOM_ID: manage-openacs-using-docker-compose-db-yaml
+:CUSTOM_ID: manage-openacs-using-docker-compose-yaml
 :END:
-We use [[https://hub.docker.com/_/postgres][official posgres]] image in docker-compose-official-db.yaml file.
+We use [[https://hub.docker.com/_/postgres][official posgres]] image in docker-compose.yaml file.
 *** Prerequisite
 :PROPERTIES:
 :CUSTOM_ID: prerequisite
@@ -191,9 +191,9 @@ cd openacs-s6
 :CUSTOM_ID: start-stop-interactive
 :END:
 start:
-#+begin_example
+#+begin_src sh :dir ../src/ :tangle no
 docker-compose up
-#+end_example
+#+end_src
 
 The site will be accessible by url  http://localhost:8080.
 
@@ -240,17 +240,18 @@ docker-compose logs --tail=10
 :PROPERTIES:
 :CUSTOM_ID: view-list-containers
 :END:
-#+begin_example
+#+begin_src sh :dir ../src/  :tangle no
 docker-compose ps
-#+end_example
+#+end_src
 
 *** Prune all
 :PROPERTIES:
 :CUSTOM_ID: prune-all
 :END:
-#+begin_example
-docker system prune --volumes --force
-#+end_example
+#+begin_src sh :dir ../src/ :tangle no
+  docker system prune --volumes --force
+#+end_src
+
 ** Deprecate. Manage OpenACS using docker-compose-datacore.yaml
 :PROPERTIES:
 :CUSTOM_ID: deprecate--manage-openacs-using-docker-compose-datacore-yaml
@@ -575,12 +576,14 @@ docker exec -it openacs-s6_postgres_1 /bin/bash
 :PROPERTIES:
 :CUSTOM_ID: code
 :END:
-** VERSION :code:
+** VERSIONS :code:
 :PROPERTIES:
-:CUSTOM_ID: version
+:CUSTOM_ID: versions
 :END:
 #+begin_src sh :shebang ""
-VERSION='oacs-5-10-1'
+  NS_IMAGE_TAG='4.99.23'
+  OACS_IMG_TAG='oacs-5-10-1'
+  OACS_TAG='oacs-5-10'
 #+end_src
 ** ../.fossil-settings/crlf-glob :code:
 :PROPERTIES:
@@ -736,14 +739,17 @@ VERSION='oacs-5-10-1'
 
         - name: Build image
           run: |
-            cd ${GITHUB_WORKSPACE}/src
-            set -a; source VERSION ; set +a;
             export IMAGE="${REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}"
-            docker build \
-            --build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
-            -t "${IMAGE}" \
-            -f ./Dockerfile \
-            .
+            cd ${GITHUB_WORKSPACE}/src/hook
+            ./build.sh
+
+            # cd ${GITHUB_WORKSPACE}/src
+            #set -a; source VERSIONS; set +a;
+            #docker build \
+            #--build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+            #-t "${IMAGE}" \
+            #-f ./Dockerfile \
+            #.
 
         # - name: Check docker image (dockle)
         #   run: |
@@ -779,15 +785,15 @@ Trigger: 10
 :END:
 #+begin_src sh :shebang ""
   # * From
-  FROM oupfiz5/naviserver-s6:4.99.23
+  ARG NS_IMAGE_TAG=${NS_IMAGE_TAG:-4.99.23}
+  FROM oupfiz5/naviserver-s6:${NS_IMAGE_TAG}
 
   # * Arguments
   ARG BUILD_DATE \
-      OACS_TAG=oacs-5-10
+      OACS_TAG=${OACS_TAG:-oacs-5-10}
 
   # * Environment
-  ENV oacs_tag=${OACS_TAG} \
-      NS_CONF="/usr/local/ns/conf/openacs_config.tcl"
+  ENV NS_CONF="/usr/local/ns/conf/openacs_config.tcl"
 
   # * Labels
   # hadolint ignore=DL3048
@@ -2041,18 +2047,19 @@ Trigger: 10
 :END:
 
 #+begin_src sh
-    # shellcheck disable=SC1091
-    set -a; source ../VERSION ; set +a;
+  # shellcheck disable=SC1091
+  set -a; source ../VERSIONS ; set +a;
 
-    IMAGE="${IMAGE:-oupfiz5/openacs-s6:${VERSION}}"
+  IMAGE="${IMAGE:-oupfiz5/openacs-s6:${OACS_IMG_TAG}}"
 
-    docker build \
-           --no-cache \
-           --build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
-           --build-arg OACS_TAG="oacs-5-10"\
-           -t "${IMAGE}" \
-           -f ../Dockerfile \
-           ../.
+  docker build \
+         --no-cache \
+         --build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+         --build-arg NS_IMAGE_TAG="${NS_IMAGE_TAG}" \
+         --build-arg OACS_TAG="${OACS_TAG}" \
+         -t "${IMAGE}" \
+         -f ../Dockerfile \
+         ../.
 #+end_src
 
 ** hook/push.sh :code:
@@ -2060,12 +2067,12 @@ Trigger: 10
 :CUSTOM_ID: hook-push-sh
 :END:
 #+begin_src sh
-    # shellcheck disable=SC1091
-    set -a; source ../VERSION ; set +a;
+  # shellcheck disable=SC1091
+  set -a; source ../VERSIONS ; set +a;
 
-    IMAGE="${IMAGE:-oupfiz5/openacs-s6:${VERSION}}"
+  IMAGE="${IMAGE:-oupfiz5/openacs-s6:${OACS_IMG_TAG}}"
 
-    docker push "${IMAGE}"
+  docker push "${IMAGE}"
 #+end_src
 
 ** docker-compose-datacore.yaml :code:
@@ -2077,7 +2084,7 @@ Trigger: 10
 
   services:
     openacs:
-      image: oupfiz5/openacs-s6:${OACS_TAG}
+      image: "oupfiz5/openacs-s6:${OACS_IMG_TAG}"
       env_file:
         - .env
       volumes:
@@ -2094,7 +2101,7 @@ Trigger: 10
         retries: 2
 
     postgres:
-      image: datacore/postgresql:${POSTGRES_DATACORE_TAG}
+      image: "datacore/postgresql:${POSTGRES_DATACORE_TAG}"
       env_file:
         - .env
       ports:
@@ -2106,50 +2113,6 @@ Trigger: 10
         retries: 5
 
   volumes:
-    content:
-#+end_src
-
-** docker-compose-official-db.yaml :code:
-:PROPERTIES:
-:CUSTOM_ID: docker-compose-official-db-yaml
-:END:
-#+begin_src yaml
-  version: '3.9'
-
-  services:
-    openacs:
-      image: oupfiz5/openacs-s6:${OACS_TAG}
-      env_file:
-        - .env
-      volumes:
-        - content:/var/www/openacs/content-repository-content-files
-        - ./rootfs/usr/local/ns/conf/:/usr/local/ns/conf/
-      depends_on:
-        - postgres
-      ports:
-        - ${OACS_LISTEN_PORT}:8000
-      healthcheck:
-        test: ["CMD-SHELL", "wget -qO - http://localhost:${OACS_LISTEN_PORT}/SYSTEM/openacs-test || exit 1"]
-        interval: 10s
-        timeout: 5s
-        retries: 2
-
-    postgres:
-      image: postgres:${POSTGRES_OFFICIAL_TAG}
-      env_file:
-        - .env
-      ports:
-        - "5432"
-      volumes:
-        - db_data:/var/lib/postgresql/data
-      healthcheck:
-        test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
-        interval: 10s
-        timeout: 5s
-        retries: 5
-
-  volumes:
-    db_data:
     content:
 #+end_src
 
@@ -2162,8 +2125,7 @@ Trigger: 10
 
   services:
     openacs:
-      image: oupfiz5/openacs-s6:${OACS_TAG}
-      restart: always
+      image: "oupfiz5/openacs-s6:${OACS_IMG_TAG}"
       env_file:
         - .env
       volumes:
@@ -2180,7 +2142,7 @@ Trigger: 10
         retries: 2
 
     postgres:
-      image: postgres:${POSTGRES_OFFICIAL_TAG}
+      image: "${POSTGRES_REPOSITORY}:${POSTGRES_TAG}"
       restart: always
       env_file:
         - .env
@@ -2205,11 +2167,11 @@ Trigger: 10
 #+begin_src sh :shebang "" :tangle-mode (identity #o644)
   # * Common
   TZ="${TZ:-UTC}"
-  OACS_TAG="${OACS_TAG:-oacs-5-10}"
 
   # * OpenACS
   NS_CONF="${NS_CONF:-/usr/local/ns/conf/openacs_config.tcl}"
   NS_VARS="${NS_VARS:-/usr/local/ns/conf/config_vars.tcl}"
+  OACS_IMG_TAG="${OACS_IMG_TAG:-oacs-5-10-1}"
   OACS_LISTEN_PORT="${OACS_LISTEN_PORT:-8080}"
 
   # * Postgres
@@ -2217,11 +2179,20 @@ Trigger: 10
   DB_NAME="${DB_NAME:-openacs}"
   DB_PASS="${DB_PASS:-testing}"
   DB_USER="${DB_USER:-openacs}"
-  POSTGRES_PASSWORD="${DB_PASS}"
-  POSTGRES_USER="${DB_USER}"
-  POSTGRES_DB="${DB_NAME}"
-  POSTGRES_OFFICIAL_TAG="14.1-alpine"
   POSTGRES_DATACORE_TAG="10.12"
+  POSTGRES_DB="${DB_NAME}"
+  POSTGRES_PASSWORD="${DB_PASS}"
+  POSTGRES_REPOSITORY="postgres"
+  POSTGRES_TAG="14.1-alpine"
+  POSTGRES_USER="${DB_USER}"
+#+end_src
+** .env.datacore :code:
+:PROPERTIES:
+:CUSTOM_ID: -env-datacore
+:END:
+#+begin_src sh :shebang "" :tangle-mode (identity #o644)
+  POSTGRES_REPOSITORY="datacore/postgresql"
+  POSTGRES_TAG="14.1-alpine"
 #+end_src
 * Local hooks :noexport:
 :PROPERTIES:

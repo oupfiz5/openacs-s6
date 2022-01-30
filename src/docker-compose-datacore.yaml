@@ -2,7 +2,7 @@ version: '3.9'
 
 services:
   openacs:
-    image: oupfiz5/openacs-s6:${OACS_TAG}
+    image: "oupfiz5/openacs-s6:${OACS_IMG_TAG}"
     env_file:
       - .env
     volumes:
@@ -19,7 +19,7 @@ services:
       retries: 2
 
   postgres:
-    image: datacore/postgresql:${POSTGRES_DATACORE_TAG}
+    image: "datacore/postgresql:${POSTGRES_DATACORE_TAG}"
     env_file:
       - .env
     ports:

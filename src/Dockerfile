@@ -1,13 +1,13 @@
 # * From
-FROM oupfiz5/naviserver-s6:4.99.23
+ARG NS_IMAGE_TAG=${NS_IMAGE_TAG:-4.99.23}
+FROM oupfiz5/naviserver-s6:${NS_IMAGE_TAG}
 
 # * Arguments
 ARG BUILD_DATE \
-    OACS_TAG=oacs-5-10
+    OACS_TAG=${OACS_TAG:-oacs-5-10}
 
 # * Environment
-ENV oacs_tag=${OACS_TAG} \
-    NS_CONF="/usr/local/ns/conf/openacs_config.tcl"
+ENV NS_CONF="/usr/local/ns/conf/openacs_config.tcl"
 
 # * Labels
 # hadolint ignore=DL3048

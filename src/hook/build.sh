@@ -1,13 +1,14 @@
 #!/bin/bash
 # shellcheck disable=SC1091
-set -a; source ../VERSION ; set +a;
+set -a; source ../VERSIONS ; set +a;
 
-IMAGE="${IMAGE:-oupfiz5/openacs-s6:${VERSION}}"
+IMAGE="${IMAGE:-oupfiz5/openacs-s6:${OACS_IMG_TAG}}"
 
 docker build \
        --no-cache \
        --build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
-       --build-arg OACS_TAG="oacs-5-10"\
+       --build-arg NS_IMAGE_TAG="${NS_IMAGE_TAG}" \
+       --build-arg OACS_TAG="${OACS_TAG}" \
        -t "${IMAGE}" \
        -f ../Dockerfile \
        ../.
