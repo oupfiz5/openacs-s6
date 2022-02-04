@@ -8,7 +8,7 @@ on:
     paths:
       - '.github/workflows/*'
       - '.github/*'
-      - 'src/Dockerfile'
+      - 'src/Dockerfile*'
       - 'src/rootfs/*'
       - 'src/hook/*'
       - 'src/*.sh'
@@ -20,7 +20,7 @@ on:
     paths:
       - '.github/workflows/*'
       - '.github/*'
-      - 'src/Dockerfile'
+      - 'src/Dockerfile*'
       - 'src/rootfs/*'
       - 'src/hook/*'
       - 'src/*.sh'

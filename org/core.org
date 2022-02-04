@@ -443,7 +443,7 @@ docker system prune --volumes --force
 |-----------------------+--------------------+-------------------------------------|
 | [[*Timezone][TZ]]                    | UTC                | Set timezone, example Europe/Moscow |
 |-----------------------+--------------------+-------------------------------------|
-| [[*OpenACS listen port][OA_LISTEN_PORT]]        | 8080               | Set http listen port, example 8080  |
+| [[*OpenACS listen port][OACS_LISTEN_PORT]]      | 8080               | Set http listen port, example 8080  |
 |-----------------------+--------------------+-------------------------------------|
 | [[*NaviServer configuration file][NS_CONF]]               | openacs_config.tcl | Configuration file for NaviServer   |
 |-----------------------+--------------------+-------------------------------------|
@@ -474,9 +474,9 @@ TZ="Europe/Moscow" docker-compose up
 :PROPERTIES:
 :CUSTOM_ID: openacs-listen-port
 :END:
-=OA_LISTEN_PORT= set the http listen port for the openacs.  In this case the OpenACS is accessible by URL [[http://localhost:8070][http://localhost:8070]].
+=OACS_LISTEN_PORT= set the http listen port for the openacs.  In this case the OpenACS is accessible by URL [[http://localhost:8070][http://localhost:8070]].
 #+begin_example
-OA_LISTEN_PORT=8070 docker-compose up
+OACS_LISTEN_PORT=8070 docker-compose up
 #+end_example
 
 ** NaviServer configuration file
@@ -633,7 +633,7 @@ docker exec -it openacs-s6_postgres_1 /bin/bash
         paths:
           - '.github/workflows/*'
           - '.github/*'
-          - 'src/Dockerfile'
+          - 'src/Dockerfile*'
           - 'src/rootfs/*'
           - 'src/hook/*'
           - 'src/*.sh'
@@ -645,7 +645,7 @@ docker exec -it openacs-s6_postgres_1 /bin/bash
         paths:
           - '.github/workflows/*'
           - '.github/*'
-          - 'src/Dockerfile'
+          - 'src/Dockerfile*'
           - 'src/rootfs/*'
           - 'src/hook/*'
           - 'src/*.sh'
@@ -687,7 +687,7 @@ docker exec -it openacs-s6_postgres_1 /bin/bash
       paths:
         - '.github/workflows/*'
         - '.github/*'
-        - 'src/Dockerfile'
+        - 'src/Dockerfile*'
         - 'src/rootfs/**'
         - 'src/hook/*'
         - 'src/*.sh'
@@ -699,7 +699,7 @@ docker exec -it openacs-s6_postgres_1 /bin/bash
       paths:
         - '.github/workflows/*'
         - '.github/*'
-        - 'src/Dockerfile'
+        - 'src/Dockerfile*'
         - 'src/rootfs/**'
         - 'src/hook/*'
         - 'src/*.sh'
@@ -2194,11 +2194,3 @@ Trigger: 10
   POSTGRES_REPOSITORY="datacore/postgresql"
   POSTGRES_TAG="14.1-alpine"
 #+end_src
-* Local hooks :noexport:
-:PROPERTIES:
-:CUSTOM_ID: local-hooks
-:END:
-
-# Local Variables:
-##after-save-hook: (lambda nil (when (org-md-export-to-markdown) (rename-file "core.md" (concat (file-name-directory (mapconcat 'identity (split-string  buffer-file-name "org/") "")) "Readme.md" )  t )))
-# End:

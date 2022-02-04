@@ -12,7 +12,7 @@
         -   [Build arguments](#build-arguments)
         -   [Example of build](#example-of-build)
 -   [Quickstart](#quickstart)
-    -   [Manage OpenACS using docker-compose-db.yaml](#manage-openacs-using-docker-compose-db-yaml)
+    -   [Manage OpenACS using docker-compose.yaml](#manage-openacs-using-docker-compose-yaml)
         -   [Prerequisite](#prerequisite)
         -   [Start/stop interactive](#start-stop-interactive)
         -   [Start/stop/remove as daemon](#start-stop-remove-as-daemon)
@@ -189,11 +189,11 @@ You can download docker images from dockerhub:
 The quickstart contains two variants:
 
 
-<a id="manage-openacs-using-docker-compose-db-yaml"></a>
+<a id="manage-openacs-using-docker-compose-yaml"></a>
 
-## Manage OpenACS using docker-compose-db.yaml
+## Manage OpenACS using docker-compose.yaml
 
-We use [official posgres](https://hub.docker.com/_/postgres) image in docker-compose-official-db.yaml file.
+We use [official posgres](https://hub.docker.com/_/postgres) image in docker-compose.yaml file.
 
 
 <a id="prerequisite"></a>
@@ -487,7 +487,7 @@ Logs tail:
 
 <tbody>
 <tr>
-<td class="org-left"><a href="#openacs-listen-port">OA_LISTEN_PORT</a></td>
+<td class="org-left"><a href="#openacs-listen-port">OACS_LISTEN_PORT</a></td>
 <td class="org-left">8080</td>
 <td class="org-left">Set http listen port, example 8080</td>
 </tr>
@@ -566,9 +566,9 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
 
 ## OpenACS listen port
 
-`OA_LISTEN_PORT` set the http listen port for the openacs.  In this case the OpenACS is accessible by URL [http://localhost:8070](http://localhost:8070).
+`OACS_LISTEN_PORT` set the http listen port for the openacs.  In this case the OpenACS is accessible by URL [http://localhost:8070](http://localhost:8070).
 
-    OA_LISTEN_PORT=8070 docker-compose up
+    OACS_LISTEN_PORT=8070 docker-compose up
 
 
 <a id="naviserver-configuration-file"></a>
