@@ -35,27 +35,13 @@ If you are reading this on GitHub, then you are looking at a Git mirror of the s
     - [[#build-arguments][Build arguments]]
     - [[#example-of-build][Example of build]]
 - [[#quickstart][Quickstart]]
-  - [[#manage-openacs-using-docker-composeyaml][Manage OpenACS using docker-compose.yaml]]
+  - [[#manage-openacs-using-docker-compose][Manage OpenACS using docker-compose]]
     - [[#prerequisite-1][Prerequisite]]
     - [[#startstop-interactive][Start/stop interactive]]
     - [[#startstopremove-as-daemon][Start/stop/remove as daemon]]
     - [[#view-logs][View logs]]
     - [[#view-list-containers][View list containers]]
     - [[#prune-all][Prune all]]
-  - [[#deprecate-manage-openacs-using-docker-compose-datacoreyaml][Deprecate. Manage OpenACS using docker-compose-datacore.yaml]]
-    - [[#prerequisite-2][Prerequisite]]
-    - [[#startstop-interactive-1][Start/stop interactive]]
-    - [[#startstopremove-as-daemon-1][Start/stop/remove as daemon]]
-    - [[#view-logs-1][View logs]]
-    - [[#view-list-containers-1][View list containers]]
-    - [[#prune-all-1][Prune all]]
-  - [[#manage-openacs-using-docker-compose-official-dbyaml][Manage OpenACS using docker-compose-official-db.yaml]]
-    - [[#prerequisite-3][Prerequisite]]
-    - [[#startstop-interactive-2][Start/stop interactive]]
-    - [[#startstopremove-as-daemon-2][Start/stop/remove as daemon]]
-    - [[#view-logs-2][View logs]]
-    - [[#view-list-containers-2][View list containers]]
-    - [[#prune-all-2][Prune all]]
 - [[#configuration-options][Configuration options]]
   - [[#general-options][General options]]
   - [[#timezone][Timezone]]
@@ -65,8 +51,7 @@ If you are reading this on GitHub, then you are looking at a Git mirror of the s
   - [[#database-hostname][Database hostname]]
   - [[#database-username][Database username]]
   - [[#database-password][Database password]]
-  - [[#postgres-official-tag][Postgres official tag]]
-  - [[#postgres-datacore-tag][Postgres datacore tag]]
+  - [[#postgres-tag][Postgres tag]]
 - [[#cicd][CI/CD]]
 - [[#maintenance][Maintenance]]
   - [[#shell-access][Shell access]]
@@ -81,20 +66,19 @@ If you are reading this on GitHub, then you are looking at a Git mirror of the s
 :END:
 1. *nix operation system
 2. Install Docker
-3. Install docker-compose
-4. Install git (optional)
-5. Install fossil (optional)
+3. Install git (optional)
+4. Install fossil (optional)
 ** Third party tools
 :PROPERTIES:
 :CUSTOM_ID: third-party-tools
 :END:
 They are using for testing and scanning:
-1. [[https://github.com/bats-core][BATS]]
-2. [[https://github.com/koalaman/shellcheck/][Shellcheck]]
+1. [[https://github.com/bats-core][Bats]]
+2. [[https://www.shellcheck.net/][Shellcheck]]
 3. [[https://github.com/hadolint/hadolint][Hadolynt]]
 4. [[https://github.com/goodwithtech/dockle][Dockle]]
-5. Snyk (todo)
-6. Trivy (todo)
+5. Snyk - not necessarily
+6. Trivy - not necessarily
 * Installation
 :PROPERTIES:
 :CUSTOM_ID: installation
@@ -104,31 +88,32 @@ They are using for testing and scanning:
 :PROPERTIES:
 :CUSTOM_ID: build-from-chiselapp--fossil-
 :END:
-#+begin_example
-fossil clone https://chiselapp.com/user/oupfiz5/repository/openacs-s6 openacs-s6.fossil
-mkdir openacs-s6
-cd openacs-s6
-fossil open ../openacs-s6.fossil
-docker build -t oupfiz5/openacs-s6 -f ./Dockerfile .
-#+end_example
+#+begin_src sh :tangle no :noweb yes
+  fossil clone https://chiselapp.com/user/oupfiz5/repository/openacs-s6 openacs-s6.fossil
+  mkdir openacs-s6
+  cd openacs-s6
+  fossil open ../openacs-s6.fossil
+  docker build -t oupfiz5/openacs-s6 -f ./Dockerfile .
+#+end_src
 
 ** Download from DockerHub
 :PROPERTIES:
 :CUSTOM_ID: download-from-dockerhub
 :END:
 You can download docker images from dockerhub:
- #+begin_example
- docker pull oupfiz5/openacs-s6:oacs-5-10
- #+end_example
+#+begin_src sh :tangle no :noweb yes
+  docker pull oupfiz5/openacs-s6:oacs-5-10
+#+end_src
+
 ** Build from GitHub
 :PROPERTIES:
 :CUSTOM_ID: build-from-github
 :END:
- #+begin_example
- git clone https://github.com/oupfiz5/openacs-s6.git
- cd openacs-s6
- docker build -t oupfiz5/openacs-s6 -f ./Dockerfile .
- #+end_example
+#+begin_src sh :tangle no :noweb yes
+  git clone https://github.com/oupfiz5/openacs-s6.git
+  cd openacs-s6
+  docker build -t oupfiz5/openacs-s6 -f ./Dockerfile .
+#+end_src
 
 ** Contfiguration
 :PROPERTIES:
@@ -150,48 +135,47 @@ You can download docker images from dockerhub:
 :PROPERTIES:
 :CUSTOM_ID: example-of-build
 :END:
-#+begin_example
-  docker build --no-cache \
+#+begin_src sh :tangle no :noweb yes :dir ../src
+    docker build --no-cache \
       --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
       --build-arg OACS_TAG="oacs-5-10" \
       -t oupfiz5/openacs-s6:oacs-5-10 \
-      -f ../Dockerfile \
-      ../.
-#+end_example
+      -f ./Dockerfile \
+      .
+#+end_src
+
 * Quickstart
 :PROPERTIES:
 :CUSTOM_ID: quickstart
 :END:
-The quickstart contains two variants:
-** Manage OpenACS using docker-compose.yaml
+** Manage OpenACS using docker-compose
 :PROPERTIES:
-:CUSTOM_ID: manage-openacs-using-docker-compose-yaml
+:CUSTOM_ID: manage-openacs-using-docker-compose
 :END:
-We use [[https://hub.docker.com/_/postgres][official posgres]] image in docker-compose.yaml file.
 *** Prerequisite
 :PROPERTIES:
 :CUSTOM_ID: prerequisite
 :END:
 Clone repository from:
 - fossil:
-  #+begin_example
-fossil clone https://chiselapp.com/user/oupfiz5/repository/openacs-s6 openacs-s6.fossil
-mkdir openacs-s6
-cd openacs-s6
-fossil open ../openacs-s6.fossil
-#+end_example
+  #+begin_src sh :tangle no :noweb yes
+    fossil clone https://chiselapp.com/user/oupfiz5/repository/openacs-s6 openacs-s6.fossil
+    mkdir openacs-s6
+    cd openacs-s6
+    fossil open ../openacs-s6.fossil
+  #+end_src
 
 - GitHub:
-  #+begin_example
-git clone https://github.com/oupfiz5/openacs-s6.git
-cd openacs-s6
-#+end_example
+  #+begin_src sh :tangle no :noweb yes
+    git clone https://github.com/oupfiz5/openacs-s6.git
+    cd openacs-s6
+  #+end_src
 *** Start/stop interactive
 :PROPERTIES:
 :CUSTOM_ID: start-stop-interactive
 :END:
 start:
-#+begin_src sh :dir ../src/ :tangle no
+#+begin_src sh :tangle no :noweb yes :dir ../src/
 docker-compose up
 #+end_src
 
@@ -207,40 +191,40 @@ stop:
 :CUSTOM_ID: start-stop-remove-as-daemon
 :END:
 start :
-#+begin_example
-docker-compose -f up -d
-#+end_example
+#+begin_src sh :tangle no :noweb yes :dir ../src/
+  docker-compose up -d
+#+end_src
 
 The site will be accessible by url  http://localhost:8080.
 
 stop:
-#+begin_example
-docker-compose -f docker-compose-official-db.yaml down
-#+end_example
+#+begin_src sh :tangle no :noweb yes :dir ../src/
+  docker-compose down
+#+end_src
 
 remove:
-#+begin_example
-docker-compose -f docker-compose-official-db.yaml rm
-#+end_example
+#+begin_src sh :tangle no :noweb yes :dir ../src/
+  docker-compose rm
+#+end_src
 
 *** View logs
 :PROPERTIES:
 :CUSTOM_ID: view-logs
 :END:
 Logs follow:
-#+begin_example
-docker-compose logs -f
-#+end_example
+#+begin_src sh :tangle no :noweb yes :dir ../src/
+  docker-compose logs -f
+#+end_src
 
 Logs tail:
-#+begin_example
-docker-compose logs --tail=10
-#+end_example
+#+begin_src sh :tangle no :noweb yes :dir ../src/
+  docker-compose logs --tail=10
+#+end_src
 *** View list containers
 :PROPERTIES:
 :CUSTOM_ID: view-list-containers
 :END:
-#+begin_src sh :dir ../src/  :tangle no
+#+begin_src sh :tangle no :noweb yes :dir ../src/
 docker-compose ps
 #+end_src
 
@@ -248,188 +232,10 @@ docker-compose ps
 :PROPERTIES:
 :CUSTOM_ID: prune-all
 :END:
-#+begin_src sh :dir ../src/ :tangle no
+#+begin_src sh :tangle no :noweb yes :dir ../src/
   docker system prune --volumes --force
 #+end_src
 
-** Deprecate. Manage OpenACS using docker-compose-datacore.yaml
-:PROPERTIES:
-:CUSTOM_ID: deprecate--manage-openacs-using-docker-compose-datacore-yaml
-:END:
-Pay attention: now it is deprecate
-We use postgres image from [[https://hub.docker.com/r/datacore/postgresql][datacore/postgresql]] in docker-compose.yaml file.
-*** Prerequisite
-:PROPERTIES:
-:CUSTOM_ID: prerequisite
-:END:
-Clone repository from:
--  fossil:
-  #+begin_example
-fossil clone https://chiselapp.com/user/oupfiz5/repository/openacs-s6 openacs-s6.fossil
-mkdir openacs-s6
-cd openacs-s6
-fossil open ../openacs-s6.fossil
-#+end_example
-- GitHub:
- #+begin_example
-git clone https://github.com/oupfiz5/openacs-s6.git
-cd openacs-s6
-#+end_example
-
-*** Start/stop interactive
-:PROPERTIES:
-:CUSTOM_ID: start-stop-interactive
-:END:
-start:
-#+begin_example
-docker-compose up
-#+end_example
-
-The site will be accessible by url  http://localhost:8080.
-
-stop:
-#+begin_example
-<Ctrl>+C
-#+end_example
-
-*** Start/stop/remove as daemon
-:PROPERTIES:
-:CUSTOM_ID: start-stop-remove-as-daemon
-:END:
-start :
-#+begin_example
-docker-compose up -d
-#+end_example
-
-The site will be accessible by url  http://localhost:8080.
-
-stop:
-#+begin_example
-docker-compose down
-#+end_example
-
-remove:
-#+begin_example
-docker-compose rm
-#+end_example
-
-*** View logs
-:PROPERTIES:
-:CUSTOM_ID: view-logs
-:END:
-Logs follow:
-#+begin_example
-docker-compose logs -f
-#+end_example
-
-Logs tail:
-#+begin_example
-docker-compose logs --tail=10
-#+end_example
-
-*** View list containers
-:PROPERTIES:
-:CUSTOM_ID: view-list-containers
-:END:
-#+begin_example
-docker-compose ps
-#+end_example
-*** Prune all
-:PROPERTIES:
-:CUSTOM_ID: prune-all
-:END:
-#+begin_example
-docker system prune --volumes --force
-#+end_example
-
-** Manage OpenACS using docker-compose-official-db.yaml
-:PROPERTIES:
-:CUSTOM_ID: manage-openacs-using-docker-compose-official-db-yaml
-:END:
-We use [[https://hub.docker.com/_/postgres][official posgres]] image in docker-compose-official-db.yaml file.
-*** Prerequisite
-:PROPERTIES:
-:CUSTOM_ID: prerequisite
-:END:
-Clone repository from:
-- fossil:
-  #+begin_example
-fossil clone https://chiselapp.com/user/oupfiz5/repository/openacs-s6 openacs-s6.fossil
-mkdir openacs-s6
-cd openacs-s6
-fossil open ../openacs-s6.fossil
-#+end_example
-
-- GitHub:
-  #+begin_example
-git clone https://github.com/oupfiz5/openacs-s6.git
-cd openacs-s6
-#+end_example
-*** Start/stop interactive
-:PROPERTIES:
-:CUSTOM_ID: start-stop-interactive
-:END:
-start:
-#+begin_example
-docker-compose -f docker-compose-official-db.yaml up
-#+end_example
-
-The site will be accessible by url  http://localhost:8080.
-
-stop:
-#+begin_example
-  <Ctrl>+C
-#+end_example
-
-*** Start/stop/remove as daemon
-:PROPERTIES:
-:CUSTOM_ID: start-stop-remove-as-daemon
-:END:
-start :
-#+begin_example
-docker-compose -f docker-compose-official-db.yaml up -d
-#+end_example
-
-The site will be accessible by url  http://localhost:8080.
-
-stop:
-#+begin_example
-docker-compose -f docker-compose-official-db.yaml down
-#+end_example
-
-remove:
-#+begin_example
-docker-compose -f docker-compose-official-db.yaml rm
-#+end_example
-
-*** View logs
-:PROPERTIES:
-:CUSTOM_ID: view-logs
-:END:
-Logs follow:
-#+begin_example
-docker-compose logs -f
-#+end_example
-
-Logs tail:
-#+begin_example
-docker-compose logs --tail=10
-#+end_example
-*** View list containers
-:PROPERTIES:
-:CUSTOM_ID: view-list-containers
-:END:
-#+begin_example
-docker-compose ps
-#+end_example
-
-*** Prune all
-:PROPERTIES:
-:CUSTOM_ID: prune-all
-:END:
-#+begin_example
-docker system prune --volumes --force
-#+end_example
 * Configuration options
 :PROPERTIES:
 :CUSTOM_ID: configuration-options
@@ -438,27 +244,25 @@ docker system prune --volumes --force
 :PROPERTIES:
 :CUSTOM_ID: general-options
 :END:
-|-----------------------+--------------------+-------------------------------------|
-| Option                | Default            | Description                         |
-|-----------------------+--------------------+-------------------------------------|
-| [[*Timezone][TZ]]                    | UTC                | Set timezone, example Europe/Moscow |
-|-----------------------+--------------------+-------------------------------------|
-| [[*OpenACS listen port][OACS_LISTEN_PORT]]      | 8080               | Set http listen port, example 8080  |
-|-----------------------+--------------------+-------------------------------------|
-| [[*NaviServer configuration file][NS_CONF]]               | openacs_config.tcl | Configuration file for NaviServer   |
-|-----------------------+--------------------+-------------------------------------|
-| [[*NaviServer variable file][NS_VARS]]               | config_vars.tcl    | Variable file for NaviServer        |
-|-----------------------+--------------------+-------------------------------------|
-| [[*Database hostname][DB_HOST]]               | postgres           | Database host name                  |
-|-----------------------+--------------------+-------------------------------------|
-| [[*Database username][DB_USER]]               | openacs            | Database user name                  |
-|-----------------------+--------------------+-------------------------------------|
-| [[*Database password][DB_PASS]]               | testing            | Database user password              |
-|-----------------------+--------------------+-------------------------------------|
-| [[*Postgres official tag][POSTGRES_OFFICIAL_TAG]] | 10-alpine          | Docker tag from official postgres.  |
-|-----------------------+--------------------+-------------------------------------|
-| [[*Postgres datacore tag][POSTGRES_DATACORE_TAG]] | 10.12              | Docker tag from datacore/postgresql |
-|-----------------------+--------------------+-------------------------------------|
+|------------------+--------------------+-------------------------------------|
+| Option           | Default            | Description                         |
+|------------------+--------------------+-------------------------------------|
+| [[*Timezone][TZ]]               | UTC                | Set timezone, example Europe/Moscow |
+|------------------+--------------------+-------------------------------------|
+| [[*OpenACS listen port][OACS_LISTEN_PORT]] | 8080               | Set http listen port, example 8080  |
+|------------------+--------------------+-------------------------------------|
+| [[*NaviServer configuration file][NS_CONF]]          | openacs_config.tcl | Configuration file for NaviServer   |
+|------------------+--------------------+-------------------------------------|
+| [[*NaviServer variable file][NS_VARS]]          | config_vars.tcl    | Variable file for NaviServer        |
+|------------------+--------------------+-------------------------------------|
+| [[*Database hostname][DB_HOST]]          | postgres           | Database host name                  |
+|------------------+--------------------+-------------------------------------|
+| [[*Database username][DB_USER]]          | openacs            | Database user name                  |
+|------------------+--------------------+-------------------------------------|
+| [[*Database password][DB_PASS]]          | testing            | Database user password              |
+|------------------+--------------------+-------------------------------------|
+| [[#postgres-tag][POSTGRES_TAG]]     | 14.1-alpine        | Postgres image tag                  |
+|------------------+--------------------+-------------------------------------|
 
 All options have predifined values and store in file =.env= .
 ** Timezone
@@ -466,18 +270,18 @@ All options have predifined values and store in file =.env= .
 :CUSTOM_ID: timezone
 :END:
 Set the timezone for the containers, defaults to UTC. To set the timezone set the desired timezone with the variable TZ.
-#+begin_example
-TZ="Europe/Moscow" docker-compose up
-#+end_example
+#+begin_src sh :tangle no :noweb yes :dir ../src/
+  TZ="Europe/Moscow" docker-compose up
+#+end_src
 
 ** OpenACS listen port
 :PROPERTIES:
 :CUSTOM_ID: openacs-listen-port
 :END:
 =OACS_LISTEN_PORT= set the http listen port for the openacs.  In this case the OpenACS is accessible by URL [[http://localhost:8070][http://localhost:8070]].
-#+begin_example
-OACS_LISTEN_PORT=8070 docker-compose up
-#+end_example
+#+begin_src sh :tangle no :noweb yes :dir ../src/
+  OACS_LISTEN_PORT=8070 docker-compose up
+#+end_src
 
 ** NaviServer configuration file
 :PROPERTIES:
@@ -486,10 +290,9 @@ OACS_LISTEN_PORT=8070 docker-compose up
 =NS_CONF= - configuration file. Default value is =/usr/local/ns/conf/openacs-config.tcl=
 1. Put the configuration file to =rootfs/usr/local/ns/conf=
 2. Run docker compose
-#+begin_example
-NS_CONF="/usr/local/ns/conf/my-config.tcl" docker-compose up
-#+end_example
-
+  #+begin_src sh :tangle no :noweb yes :dir ../src/
+  NS_CONF="/usr/local/ns/conf/my-config.tcl" docker-compose up
+  #+end_src
 ** NaviServer variable file
 :PROPERTIES:
 :CUSTOM_ID: naviserver-variable-file
@@ -497,59 +300,46 @@ NS_CONF="/usr/local/ns/conf/my-config.tcl" docker-compose up
 =NS_VARS= - - configuration file. This configuration file contains several parameters which are frequently changed (e.g. for debug or other configurations). The provided NaviServer configuation file reads the variable file and uses its values.  Default value is =/usr/local/ns/conf/config_vars.tcl=
 1. Put the configuration file to =rootfs/usr/local/ns/conf=
 2. Run docker compose
-#+begin_example
-NS_VARS="/usr/local/ns/conf/my_vars.tcl" docker-compose up
-#+end_example
+  #+begin_src sh :tangle no :noweb yes :dir ../src/
+    NS_VARS="/usr/local/ns/conf/my_vars.tcl" docker-compose up
+  #+end_src
 
 ** Database hostname
 :PROPERTIES:
 :CUSTOM_ID: database-hostname
 :END:
 =DB_HOST= set the database hostname for the openacs. By default it has name of docker-compose database  service - postgres.
-
-#+begin_example
-DB_HOST=foo docker-compose up
-#+end_example
+  #+begin_src sh :tangle no :noweb yes :dir ../src/
+  DB_HOST=foo docker-compose up
+  #+end_src
 
 ** Database username
 :PROPERTIES:
 :CUSTOM_ID: database-username
 :END:
 =DB_USER= set the database username for the openacs and postgres.
-
-#+begin_example
-DB_USER=foouser docker-compose up
-#+end_example
+  #+begin_src sh :tangle no :noweb yes :dir ../src/
+    DB_USER=foouser docker-compose up
+  #+end_src
 
 ** Database password
 :PROPERTIES:
 :CUSTOM_ID: database-password
 :END:
 =DB_PASS= set the database user password for the openacs and postgres.
+  #+begin_src sh :tangle no :noweb yes :dir ../src/
+    DB_PASS=foopass docker-compose up
+  #+end_src
 
-#+begin_example
-DB_PASS=foopass docker-compose up
-#+end_example
-
-** Postgres official tag
+** Postgres tag
 :PROPERTIES:
-:CUSTOM_ID: postgres-official-tag
+:CUSTOM_ID: postgres-tag
 :END:
-=POSTGRES_OFFICIAL_TAG= set the docker image tag for [[https://hub.docker.com/_/postgres][official postgres]]. Using only for =docker-compose-official-db.yaml=  Pay attention - some openacs version can use only correspond version of postgres.
+=POSTGRES_TAG= set the docker image tag for [[https://hub.docker.com/_/postgres][official postgres]].  Pay attention - some openacs version can use only correspond version of postgres.
+  #+begin_src sh :tangle no :noweb yes :dir ../src/
+    POSTGRES_TAG="14.1-alpine" docker-compose up
+  #+end_src
 
-#+begin_example
-POSTGRES_OFFICIAL_TAG="14.1-alpine" docker-compose up
-#+end_example
-
-** Postgres datacore tag
-:PROPERTIES:
-:CUSTOM_ID: postgres-datacore-tag
-:END:
-=POSTGRES_DATACORE_TAG= set the docker image tag for [[https://hub.docker.com/r/datacore/postgresql][datacore postgres]]. Using only for =docker-compose.yaml=. Pay attention - some openacs version can use only correspond version of postgres.
-
-#+begin_example
-POSTGRES_OFFICIAL_TAG="10.12" docker-compose up
-#+end_example
 * CI/CD
 :PROPERTIES:
 :CUSTOM_ID: ci-cd
@@ -564,13 +354,13 @@ POSTGRES_OFFICIAL_TAG="10.12" docker-compose up
 :CUSTOM_ID: shell-access
 :END:
 For debugging and maintenance purposes you may want access the containers shell. If you are using Docker version 1.3.0 or higher you can access a running containers shell by starting bash using docker exec:
-#+begin_example
-docker exec -it openacs-s6_openacs_1 /bin/bash
-#+end_example
+  #+begin_src sh :tangle no :noweb yes :dir ../src/
+    docker exec -it openacs-s6_openacs_1 /bin/bash
+  #+end_src
 
-#+begin_example
-docker exec -it openacs-s6_postgres_1 /bin/bash
-#+end_example
+  #+begin_src sh :tangle no :noweb yes :dir ../src/
+      docker exec -it openacs-s6_postgres_1 /bin/bash
+  #+end_src
 
 * Code :code:noexport:
 :PROPERTIES:
@@ -581,7 +371,13 @@ docker exec -it openacs-s6_postgres_1 /bin/bash
 :CUSTOM_ID: versions
 :END:
 #+begin_src sh :shebang ""
+  CONTAINER_NAME='openacs-s6'
+  NS_IMAGE_REPOSITORY='oupfiz5'
+  NS_IMAGE_NAME='naviserver-s6'
   NS_IMAGE_TAG='4.99.23'
+  IMAGE_NAME='openacs-s6'
+  IMAGE_REPOSITORY='oupfiz5'
+  IMAGE_TAG="${NS_IMAGE_TAG}"
   OACS_IMG_TAG='oacs-5-10-1'
   OACS_TAG='oacs-5-10'
 #+end_src
@@ -631,26 +427,27 @@ docker exec -it openacs-s6_postgres_1 /bin/bash
           - master
           - main
         paths:
-          - '.github/workflows/*'
           - '.github/*'
-          - 'src/Dockerfile*'
-          - 'src/rootfs/*'
-          - 'src/hook/*'
+          - '.github/workflows/*'
           - 'src/*.sh'
+          - 'src/Dockerfile*'
+          - 'src/VERSIONS'
+          - 'src/hook/*'
+          - 'src/rootfs/*'
           - 'tests/**'
       pull_request:
         branches:
           - master
           - main
         paths:
-          - '.github/workflows/*'
           - '.github/*'
-          - 'src/Dockerfile*'
-          - 'src/rootfs/*'
-          - 'src/hook/*'
+          - '.github/workflows/*'
           - 'src/*.sh'
+          - 'src/Dockerfile*'
+          - 'src/VERSIONS'
+          - 'src/hook/*'
+          - 'src/rootfs/*'
           - 'tests/**'
-
     jobs:
       build:
         name: Build and push image to dockerhub
@@ -678,90 +475,78 @@ docker exec -it openacs-s6_postgres_1 /bin/bash
 :CUSTOM_ID: ----github-workflows-test-yaml
 :END:
 #+begin_src yaml :shebang ""
-  name: Tests
+  name: Tests and Checks
 
   # * Controls
   # Controls when the action will run.
   on:
     push:
       paths:
-        - '.github/workflows/*'
         - '.github/*'
-        - 'src/Dockerfile*'
-        - 'src/rootfs/**'
-        - 'src/hook/*'
+        - '.github/workflows/*'
         - 'src/*.sh'
+        - 'src/Dockerfile*'
+        - 'src/VERSIONS'
+        - 'src/hook/*'
+        - 'src/rootfs/**'
         - 'tests/**'
       branches-ignore:
         - 'master'
         - 'main'
     pull_request:
       paths:
-        - '.github/workflows/*'
         - '.github/*'
-        - 'src/Dockerfile*'
-        - 'src/rootfs/**'
-        - 'src/hook/*'
+        - '.github/workflows/*'
         - 'src/*.sh'
+        - 'src/Dockerfile*'
+        - 'src/VERSIONS'
+        - 'src/hook/*'
+        - 'src/rootfs/**'
         - 'tests/**'
       branches-ignore:
         - 'master'
         - 'main'
     workflow_dispatch:
 
-  # * Environments
-  env:
-    CONTAINER_NAME: "openacs-s6"
-    IMAGE_NAME: "openacs-s6"
-    IMAGE_TAG: "${{ github.sha }}"
-    REPOSITORY: "oupfiz5"
-
   # * Jobs
   jobs:
     checks:
-      name: Checks
+      name: Tests and Checks
       runs-on: ubuntu-20.04
       steps:
         - name: Repo checkout
           uses: actions/checkout@v2
 
-        # - name: Check shell files (shellcheck)
-        #   run: |
-        #     sudo apt-get update -y
-        #     sudo apt-get install shellcheck
-        #     cd ${GITHUB_WORKSPACE}/tests
-        #     .bats-battery/bats-core/bin/bats 01.shellchecks.bats
-
-        # - name: Check Dockerfile (hadolint)
-        #   run: |
-        #     cd ${GITHUB_WORKSPACE}/tests
-        #     .bats-battery/bats-core/bin/bats 02.dockerfile_check.bats
-
-        - name: Build image
+        - name: Check shell files (shellcheck)
           run: |
-            export IMAGE="${REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}"
+            sudo apt-get update -y
+            sudo apt-get install shellcheck
+            cd ${GITHUB_WORKSPACE}/tests
+            .bats-battery/bats-core/bin/bats 01.shellchecks.bats
+
+        - name: Check Dockerfile (hadolint)
+          run: |
+            cd ${GITHUB_WORKSPACE}/tests
+            .bats-battery/bats-core/bin/bats 02.dockerfile_check.bats
+
+        - name: Naviserver. Build. Check image and container.
+          run: |
+            echo "::group::Build image"
+            set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
+            export IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
+            echo "Build image"
             cd ${GITHUB_WORKSPACE}/src/hook
             ./build.sh
+            echo "::endgroup::"
 
-            # cd ${GITHUB_WORKSPACE}/src
-            #set -a; source VERSIONS; set +a;
-            #docker build \
-            #--build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
-            #-t "${IMAGE}" \
-            #-f ./Dockerfile \
-            #.
+            echo "::group::Check image and container"
+            cd ${GITHUB_WORKSPACE}/tests
+            echo "Check docker image (dockle)"
+            .bats-battery/bats-core/bin/bats 03.docker_image_check.bats
+            echo "Check docker container"
+            .bats-battery/bats-core/bin/bats 04.container_check.bats
+            echo "::endgroup::"
 
-        # - name: Check docker image (dockle)
-        #   run: |
-        #     cd ${GITHUB_WORKSPACE}/tests
-        #     export IMAGE="${REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}"
-        #     .bats-battery/bats-core/bin/bats 03.docker_image_check.bats
-
-        # - name: Check docker container
-        #   run: |
-        #     cd ${GITHUB_WORKSPACE}/tests
-        #     export IMAGE="${REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}"
-        #     .bats-battery/bats-core/bin/bats 04.container_check.bats
 #+end_src
 ** ../.github/.trigger_on_push :code:
 :PROPERTIES:
@@ -784,16 +569,21 @@ Trigger: 10
 :CUSTOM_ID: dockerfile
 :END:
 #+begin_src sh :shebang ""
-  # * From
-  ARG NS_IMAGE_TAG=${NS_IMAGE_TAG:-4.99.23}
-  FROM oupfiz5/naviserver-s6:${NS_IMAGE_TAG}
-
   # * Arguments
-  ARG BUILD_DATE \
-      OACS_TAG=${OACS_TAG:-oacs-5-10}
+  ARG \
+      NS_IMAGE_REPOSITORY="${NS_IMAGE_REPOSITORY}" \
+      NS_IMAGE_NAME="${NS_IMAGE_NAME}" \
+      NS_IMAGE_TAG="${NS_IMAGE_TAG}"
+
+  # * From
+  FROM ${NS_IMAGE_REPOSITORY}/${NS_IMAGE_NAME}:${NS_IMAGE_TAG}
 
   # * Environment
   ENV NS_CONF="/usr/local/ns/conf/openacs_config.tcl"
+
+  ARG \
+      BUILD_DATE="${BUILD_DATE}" \
+      OACS_TAG="${OACS_TAG}"
 
   # * Labels
   # hadolint ignore=DL3048
@@ -819,20 +609,22 @@ Trigger: 10
   # * Install OpenACS
   RUN mkdir -p /var/www
 
-  ADD https://github.com/openacs/openacs-core/archive/${OACS_TAG}.tar.gz /tmp/${OACS_TAG}.tar.gz
+  ADD https://github.com/openacs/openacs-core/archive/"${OACS_TAG}".tar.gz /tmp/"${OACS_TAG}".tar.gz
 
-  RUN tar xzf /tmp/${OACS_TAG}.tar.gz -C /var/www; \
-      mv /var/www/openacs-core-${OACS_TAG} /var/www/openacs; \
+  # ** Run
+  # hadolint ignore=DL3008
+  RUN tar xzf /tmp/"${OACS_TAG}".tar.gz -C /var/www; \
+      mv /var/www/openacs-core-"${OACS_TAG}" /var/www/openacs; \
       mkdir /var/www/openacs/log/; \
       chown -R nsadmin:nsadmin /var/www/openacs; \
-      rm /tmp/${OACS_TAG}.tar.gz
+      rm /tmp/"${OACS_TAG}".tar.gz
 
   # ** Install openacs-bootstrap3-theme
-  ADD https://github.com/openacs/openacs-bootstrap3-theme/archive/${OACS_TAG}.tar.gz /tmp/openacs-bootstrap3-theme-${OACS_TAG}.tar.gz
+  ADD https://github.com/openacs/openacs-bootstrap3-theme/archive/"${OACS_TAG}".tar.gz /tmp/openacs-bootstrap3-theme-"${OACS_TAG}".tar.gz
 
-  RUN tar xzf /tmp/openacs-bootstrap3-theme-${OACS_TAG}.tar.gz -C /var/www/openacs/packages; \
-      mv /var/www/openacs/packages/openacs-bootstrap3-theme-${OACS_TAG} /var/www/openacs/packages/openacs-bootstrap3-theme; \
-      rm /tmp/openacs-bootstrap3-theme-${OACS_TAG}.tar.gz
+  RUN tar xzf /tmp/openacs-bootstrap3-theme-"${OACS_TAG}".tar.gz -C /var/www/openacs/packages; \
+      mv /var/www/openacs/packages/openacs-bootstrap3-theme-"${OACS_TAG}" /var/www/openacs/packages/openacs-bootstrap3-theme; \
+      rm /tmp/openacs-bootstrap3-theme-"${OACS_TAG}".tar.gz
 
   # ** Copy openacs configuration files
   COPY rootfs/usr/local/ns/conf/openacs_config.tcl /usr/local/ns/conf/openacs_config.tcl
@@ -2050,15 +1842,18 @@ Trigger: 10
   # shellcheck disable=SC1091
   set -a; source ../VERSIONS ; set +a;
 
-  IMAGE="${IMAGE:-oupfiz5/openacs-s6:${OACS_IMG_TAG}}"
+  IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
+  DOCKERFILE="${DOCKERFILE:-Dockerfile}"
 
   docker build \
          --no-cache \
          --build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
+         --build-arg NS_IMAGE_REPOSITORY="${NS_IMAGE_REPOSITORY}" \
+         --build-arg NS_IMAGE_NAME="${NS_IMAGE_NAME}" \
          --build-arg NS_IMAGE_TAG="${NS_IMAGE_TAG}" \
          --build-arg OACS_TAG="${OACS_TAG}" \
          -t "${IMAGE}" \
-         -f ../Dockerfile \
+         -f ../"${DOCKERFILE}" \
          ../.
 #+end_src
 
@@ -2070,50 +1865,9 @@ Trigger: 10
   # shellcheck disable=SC1091
   set -a; source ../VERSIONS ; set +a;
 
-  IMAGE="${IMAGE:-oupfiz5/openacs-s6:${OACS_IMG_TAG}}"
+  IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
 
   docker push "${IMAGE}"
-#+end_src
-
-** docker-compose-datacore.yaml :code:
-:PROPERTIES:
-:CUSTOM_ID: docker-compose-datacore-yaml
-:END:
-#+begin_src yaml
-  version: '3.9'
-
-  services:
-    openacs:
-      image: "oupfiz5/openacs-s6:${OACS_IMG_TAG}"
-      env_file:
-        - .env
-      volumes:
-        - content:/var/www/openacs/content-repository-content-files
-        - ./rootfs/usr/local/ns/conf/:/usr/local/ns/conf/
-      depends_on:
-        - postgres
-      ports:
-        - ${OACS_LISTEN_PORT}:8000
-      healthcheck:
-        test: ["CMD-SHELL", "wget -qO - http://localhost:${OACS_LISTEN_PORT}/SYSTEM/openacs-test || exit 1"]
-        interval: 10s
-        timeout: 5s
-        retries: 2
-
-    postgres:
-      image: "datacore/postgresql:${POSTGRES_DATACORE_TAG}"
-      env_file:
-        - .env
-      ports:
-        - "5432"
-      healthcheck:
-        test: ["CMD-SHELL", "pg_isready -U ${DB_USER}"]
-        interval: 10s
-        timeout: 5s
-        retries: 5
-
-  volumes:
-    content:
 #+end_src
 
 ** docker-compose.yaml :code:
@@ -2179,18 +1933,267 @@ Trigger: 10
   DB_NAME="${DB_NAME:-openacs}"
   DB_PASS="${DB_PASS:-testing}"
   DB_USER="${DB_USER:-openacs}"
-  POSTGRES_DATACORE_TAG="10.12"
   POSTGRES_DB="${DB_NAME}"
   POSTGRES_PASSWORD="${DB_PASS}"
   POSTGRES_REPOSITORY="postgres"
   POSTGRES_TAG="14.1-alpine"
   POSTGRES_USER="${DB_USER}"
 #+end_src
-** .env.datacore :code:
+
+* Tests :test:noexport:
 :PROPERTIES:
-:CUSTOM_ID: -env-datacore
+:header-args:bats+:   :tangle (concat (file-name-directory (mapconcat 'identity (split-string  buffer-file-name "org/") "")) "/tests/" (nth 4 (org-heading-components)) )
+:header-args:sh+:  :tangle (concat (file-name-directory (mapconcat 'identity (split-string  buffer-file-name "org/") "")) "/tests/" (nth 4 (org-heading-components)) )
+:CUSTOM_ID: tests
 :END:
-#+begin_src sh :shebang "" :tangle-mode (identity #o644)
-  POSTGRES_REPOSITORY="datacore/postgresql"
-  POSTGRES_TAG="14.1-alpine"
+** helpers.bash :test:
+:PROPERTIES:
+:CUSTOM_ID: helpers-bash
+:END:
+#+begin_src sh :shebang "" :results output pp :noweb strip-export :tangle-mode (identity #o644)
+# * Load Add-ons
+load '.bats-battery/bats-assert/load.bash'
+load '.bats-battery/bats-file/load.bash'
+load '.bats-battery/bats-support/load.bash'
+#+end_src
+
+** 01.shellchecks.bats :test:
+:PROPERTIES:
+:CUSTOM_ID: 01-shellchecks-bats
+:END:
+#+begin_src bats :results output pp :noweb strip-export :dir ../
+
+  setup() {
+      targets=()
+      while IFS=  read -r -d $'\0'; do
+          targets+=("$REPLY")
+      done < <(
+          find \
+              ../src/hook \
+              ../src/builds \
+              -type f ! -iname ".gitignore" \
+              -print0
+      )
+  }
+
+  @test "Check shell files" {
+        run export LC_ALL=C.UTF-8; shellcheck "${targets[@]}"
+        assert_success
+  }
+
+  @test "Check VERSIONS file" {
+        run export LC_ALL=C.UTF-8; shellcheck --shell=sh --exclude=SC2034 ../src/VERSIONS
+        assert_success
+  }
+
+#+end_src
+
+#+RESULTS:
+
+** 02.dockerfile_check.bats :test:
+:PROPERTIES:
+:CUSTOM_ID: 02-dockerfile-check-bats
+:END:
+#+begin_src bats :results output pp :noweb strip-export
+
+  @test "Check Dockerfile" {
+        run docker run --rm -i -v "${PWD}/../src":/work --workdir=/work  hadolint/hadolint hadolint -f json Dockerfile
+        assert_success
+  }
+
+#+end_src
+
+** 03.docker_image_check.bats :test:
+:PROPERTIES:
+:CUSTOM_ID: 03-docker-image-check-bats
+:END:
+
+#+begin_src bats :results output pp :noweb strip-export
+
+  setup() {
+      . ../src/VERSIONS
+      IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
+
+      VERSION=$(
+          curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
+              grep '"tag_name":' | \
+              sed -E 's/.*"v([^"]+)".*/\1/' \
+             )
+    }
+
+  @test "Check docker image" {
+      run docker run --rm \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          -v "$(pwd)"/.dockleignore:/.dockleignore \
+          goodwithtech/dockle:v"${VERSION}" \
+          --exit-code 1 \
+          --exit-level fatal \
+          "${IMAGE}"
+      assert_success
+    }
+#+end_src
+
+** 04.container_check.bats :test:
+:PROPERTIES:
+:CUSTOM_ID: 04-container-check-bats
+:END:
+#+begin_src bats :results output pp :noweb strip-export
+
+  setup() {
+      . ../src/VERSIONS
+      IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
+  }
+
+  @test "Verify container run" {
+      run docker run -itd \
+       --restart always \
+       --name="${CONTAINER_NAME}" \
+       -p 127.0.0.1:8090:8080 \
+       "${IMAGE}"
+      assert_success
+  }
+
+  @test "Verify state status container - running" {
+      sleep 5
+      run docker inspect --format 'result={{ .State.Status }}' "${CONTAINER_NAME}"
+      assert_success
+      assert_output 'result=running'
+  }
+
+  @test "Verify state running container - true" {
+      run docker inspect --format 'result={{ .State.Running }}' "${CONTAINER_NAME}"
+      assert_success
+      assert_output 'result=true'
+  }
+
+  @test "Verify state restarting container - false" {
+      run docker inspect --format 'result={{ .State.Restarting }}' "${CONTAINER_NAME}"
+      assert_success
+      assert_output 'result=false'
+  }
+
+  @test "Verify state error container - <empty>" {
+      run docker inspect --format 'result={{ .State.Error }}' "${CONTAINER_NAME}"
+      assert_success
+      assert_output 'result='
+  }
+
+  @test "Verify restart count container - 0" {
+      run docker inspect --format 'result={{ .RestartCount }}' "${CONTAINER_NAME}"
+      assert_success
+      assert_output 'result=0'
+  }
+
+  # @test "Verify AppArmor Profile - if applicable" {
+  #       skip
+  #       run docker inspect --format 'AppArmorProfile={{ .AppArmorProfile }}' "${CONTAINER_NAME}"
+  #       assert_success
+  #       refute_output "AppArmorProfile=[]"
+  #       refute_output "AppArmorProfile="
+  #       refute_output "AppArmorProfile=<no value>"
+  # }
+
+  @test "Verify container stop" {
+      run docker container stop "${CONTAINER_NAME}"
+      assert_success
+  }
+
+  @test "Remove container" {
+      run docker container rm "${CONTAINER_NAME}" || true
+      assert_success
+  }
+
+#+end_src
+
+** shellcheck.sh :test:noexport:notangle:
+:PROPERTIES:
+:CUSTOM_ID: shellcheck-sh
+:END:
+#+begin_src sh :results output pp :noweb strip-export :tangle no
+  set -e
+
+  targets=()
+  while IFS=  read -r -d $'\0'; do
+      targets+=("$REPLY")
+  done < <(
+    find \
+      ../src/rootfs/etc \
+      ../src/hook \
+      -type f \
+      -print0
+    )
+
+
+  echo "Shellcheck files"
+  LC_ALL=C.UTF-8 shellcheck "${targets[@]}"
+
+  # VERSION were exclude from main check (above)
+  # exclude warning https://github.com/koalaman/shellcheck/wiki/SC2034
+  echo "Shellcheck VERSION"
+  #LC_ALL=C.UTF-8 shellcheck --shell=sh --exclude=SC2034 VERSION
+
+  exit $?
+#+end_src
+
+** docker_image_check.sh :test:noexport:notangle:
+:PROPERTIES:
+:CUSTOM_ID: docker-image-check-sh
+:END:
+#+begin_src sh :results output pp :noweb strip-export :tangle no
+  set -e
+  IMAGE_NAME="${1:-oupfiz5/tcl-build:latest}"
+
+  # * Install dockle and check targets
+  # Pay attention: some checks are ignored using .dockleignore
+  VERSION=$(
+      curl --silent "https://api.github.com/repos/goodwithtech/dockle/releases/latest" | \
+          grep '"tag_name":' | \
+          sed -E 's/.*"v([^"]+)".*/\1/' \
+         ) && docker run --rm \
+                         -v /var/run/docker.sock:/var/run/docker.sock \
+                         -v "$(pwd)"/.dockleignore:/.dockleignore \
+                         goodwithtech/dockle:v"${VERSION}" \
+                         --exit-code 1 \
+                         --exit-level fatal \
+                         "${IMAGE_NAME}"
+  exit $?
+#+end_src
+
+#+RESULTS:
+
+** .dockleignore :test:
+:PROPERTIES:
+:CUSTOM_ID: -dockleignore
+:END:
+#+begin_src sh :shebang ""
+# Use COPY instead of ADD in Dockerfile because need to add s6-overlay from urlencode
+CIS-DI-0009
+# Use latest tag because to check the image inside only
+DKL-DI-0006
+# set root to default user because it will be use for next build
+CIS-DI-0001
+#+end_src
+** dockerfile_check.sh :test:noexport:notangle:
+:PROPERTIES:
+:CUSTOM_ID: dockerfile-check-sh
+:END:
+#+begin_src sh :results output pp :noweb strip-export :tangle no
+    set -e
+
+    # * Get list of targets
+    targets=()
+    while IFS=  read -r -d $'\0'; do
+        targets+=("$REPLY")
+    done < <(
+      find \
+         ../src/Dockerfile \
+        -type f \
+        -print0
+      )
+
+    # * Pull hadolint and check targets
+    echo Test Dockerfile - $(date)
+    docker run --rm -i hadolint/hadolint < "${targets[@]}" && echo "Success"
+
+    exit $?
 #+end_src

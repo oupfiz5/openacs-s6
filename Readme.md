@@ -12,21 +12,7 @@
         -   [Build arguments](#build-arguments)
         -   [Example of build](#example-of-build)
 -   [Quickstart](#quickstart)
-    -   [Manage OpenACS using docker-compose.yaml](#manage-openacs-using-docker-compose-yaml)
-        -   [Prerequisite](#prerequisite)
-        -   [Start/stop interactive](#start-stop-interactive)
-        -   [Start/stop/remove as daemon](#start-stop-remove-as-daemon)
-        -   [View logs](#view-logs)
-        -   [View list containers](#view-list-containers)
-        -   [Prune all](#prune-all)
-    -   [Deprecate. Manage OpenACS using docker-compose-datacore.yaml](#deprecate--manage-openacs-using-docker-compose-datacore-yaml)
-        -   [Prerequisite](#prerequisite)
-        -   [Start/stop interactive](#start-stop-interactive)
-        -   [Start/stop/remove as daemon](#start-stop-remove-as-daemon)
-        -   [View logs](#view-logs)
-        -   [View list containers](#view-list-containers)
-        -   [Prune all](#prune-all)
-    -   [Manage OpenACS using docker-compose-official-db.yaml](#manage-openacs-using-docker-compose-official-db-yaml)
+    -   [Manage OpenACS using docker-compose](#manage-openacs-using-docker-compose)
         -   [Prerequisite](#prerequisite)
         -   [Start/stop interactive](#start-stop-interactive)
         -   [Start/stop/remove as daemon](#start-stop-remove-as-daemon)
@@ -42,8 +28,7 @@
     -   [Database hostname](#database-hostname)
     -   [Database username](#database-username)
     -   [Database password](#database-password)
-    -   [Postgres official tag](#postgres-official-tag)
-    -   [Postgres datacore tag](#postgres-datacore-tag)
+    -   [Postgres tag](#postgres-tag)
 -   [CI/CD](#ci-cd)
 -   [Maintenance](#maintenance)
     -   [Shell access](#shell-access)
@@ -72,9 +57,8 @@ If you are reading this on GitHub, then you are looking at a Git mirror of the s
 
 1.  \*nix operation system
 2.  Install Docker
-3.  Install docker-compose
-4.  Install git (optional)
-5.  Install fossil (optional)
+3.  Install git (optional)
+4.  Install fossil (optional)
 
 
 <a id="third-party-tools"></a>
@@ -83,12 +67,12 @@ If you are reading this on GitHub, then you are looking at a Git mirror of the s
 
 They are using for testing and scanning:
 
-1.  [BATS](https://github.com/bats-core)
-2.  [Shellcheck](https://github.com/koalaman/shellcheck/)
+1.  [Bats](https://github.com/bats-core)
+2.  [Shellcheck](https://www.shellcheck.net/)
 3.  [Hadolynt](https://github.com/hadolint/hadolint)
 4.  [Dockle](https://github.com/goodwithtech/dockle)
-5.  Snyk (todo)
-6.  Trivy (todo)
+5.  Snyk - not necessarily
+6.  Trivy - not necessarily
 
 
 <a id="installation"></a>
@@ -175,25 +159,21 @@ You can download docker images from dockerhub:
 ### Example of build
 
     docker build --no-cache \
-        --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
-        --build-arg OACS_TAG="oacs-5-10" \
-        -t oupfiz5/openacs-s6:oacs-5-10 \
-        -f ../Dockerfile \
-        ../.
+      --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+      --build-arg OACS_TAG="oacs-5-10" \
+      -t oupfiz5/openacs-s6:oacs-5-10 \
+      -f ./Dockerfile \
+      .
 
 
 <a id="quickstart"></a>
 
 # Quickstart
 
-The quickstart contains two variants:
 
+<a id="manage-openacs-using-docker-compose"></a>
 
-<a id="manage-openacs-using-docker-compose-yaml"></a>
-
-## Manage OpenACS using docker-compose.yaml
-
-We use [official posgres](https://hub.docker.com/_/postgres) image in docker-compose.yaml file.
+## Manage OpenACS using docker-compose
 
 
 <a id="prerequisite"></a>
@@ -209,93 +189,6 @@ Clone repository from:
         cd openacs-s6
         fossil open ../openacs-s6.fossil
 
--   GitHub:
-
-        git clone https://github.com/oupfiz5/openacs-s6.git
-        cd openacs-s6
-
-
-<a id="start-stop-interactive"></a>
-
-### Start/stop interactive
-
-start:
-
-    docker-compose up
-
-The site will be accessible by url  <http://localhost:8080>.
-
-stop:
-
-    <Ctrl>+C
-
-
-<a id="start-stop-remove-as-daemon"></a>
-
-### Start/stop/remove as daemon
-
-start :
-
-    docker-compose -f up -d
-
-The site will be accessible by url  <http://localhost:8080>.
-
-stop:
-
-    docker-compose -f docker-compose-official-db.yaml down
-
-remove:
-
-    docker-compose -f docker-compose-official-db.yaml rm
-
-
-<a id="view-logs"></a>
-
-### View logs
-
-Logs follow:
-
-    docker-compose logs -f
-
-Logs tail:
-
-    docker-compose logs --tail=10
-
-
-<a id="view-list-containers"></a>
-
-### View list containers
-
-    docker-compose ps
-
-
-<a id="prune-all"></a>
-
-### Prune all
-
-    docker system prune --volumes --force
-
-
-<a id="deprecate--manage-openacs-using-docker-compose-datacore-yaml"></a>
-
-## Deprecate. Manage OpenACS using docker-compose-datacore.yaml
-
-Pay attention: now it is deprecate
-We use postgres image from [datacore/postgresql](https://hub.docker.com/r/datacore/postgresql) in docker-compose.yaml file.
-
-
-<a id="prerequisite"></a>
-
-### Prerequisite
-
-Clone repository from:
-
--   fossil:
-
-        fossil clone https://chiselapp.com/user/oupfiz5/repository/openacs-s6 openacs-s6.fossil
-        mkdir openacs-s6
-        cd openacs-s6
-        fossil open ../openacs-s6.fossil
 -   GitHub:
 
         git clone https://github.com/oupfiz5/openacs-s6.git
@@ -334,93 +227,6 @@ stop:
 remove:
 
     docker-compose rm
-
-
-<a id="view-logs"></a>
-
-### View logs
-
-Logs follow:
-
-    docker-compose logs -f
-
-Logs tail:
-
-    docker-compose logs --tail=10
-
-
-<a id="view-list-containers"></a>
-
-### View list containers
-
-    docker-compose ps
-
-
-<a id="prune-all"></a>
-
-### Prune all
-
-    docker system prune --volumes --force
-
-
-<a id="manage-openacs-using-docker-compose-official-db-yaml"></a>
-
-## Manage OpenACS using docker-compose-official-db.yaml
-
-We use [official posgres](https://hub.docker.com/_/postgres) image in docker-compose-official-db.yaml file.
-
-
-<a id="prerequisite"></a>
-
-### Prerequisite
-
-Clone repository from:
-
--   fossil:
-
-        fossil clone https://chiselapp.com/user/oupfiz5/repository/openacs-s6 openacs-s6.fossil
-        mkdir openacs-s6
-        cd openacs-s6
-        fossil open ../openacs-s6.fossil
-
--   GitHub:
-
-        git clone https://github.com/oupfiz5/openacs-s6.git
-        cd openacs-s6
-
-
-<a id="start-stop-interactive"></a>
-
-### Start/stop interactive
-
-start:
-
-    docker-compose -f docker-compose-official-db.yaml up
-
-The site will be accessible by url  <http://localhost:8080>.
-
-stop:
-
-    <Ctrl>+C
-
-
-<a id="start-stop-remove-as-daemon"></a>
-
-### Start/stop/remove as daemon
-
-start :
-
-    docker-compose -f docker-compose-official-db.yaml up -d
-
-The site will be accessible by url  <http://localhost:8080>.
-
-stop:
-
-    docker-compose -f docker-compose-official-db.yaml down
-
-remove:
-
-    docker-compose -f docker-compose-official-db.yaml rm
 
 
 <a id="view-logs"></a>
@@ -535,17 +341,9 @@ Logs tail:
 
 <tbody>
 <tr>
-<td class="org-left"><a href="#postgres-official-tag">POSTGRES_OFFICIAL_TAG</a></td>
-<td class="org-left">10-alpine</td>
-<td class="org-left">Docker tag from official postgres.</td>
-</tr>
-</tbody>
-
-<tbody>
-<tr>
-<td class="org-left"><a href="#postgres-datacore-tag">POSTGRES_DATACORE_TAG</a></td>
-<td class="org-left">10.12</td>
-<td class="org-left">Docker tag from datacore/postgresql</td>
+<td class="org-left"><a href="#postgres-tag">POSTGRES_TAG</a></td>
+<td class="org-left">14.1-alpine</td>
+<td class="org-left">Postgres image tag</td>
 </tr>
 </tbody>
 </table>
@@ -580,7 +378,7 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
 1.  Put the configuration file to `rootfs/usr/local/ns/conf`
 2.  Run docker compose
 
-    NS_CONF="/usr/local/ns/conf/my-config.tcl" docker-compose up
+        NS_CONF="/usr/local/ns/conf/my-config.tcl" docker-compose up
 
 
 <a id="naviserver-variable-file"></a>
@@ -592,7 +390,7 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
 1.  Put the configuration file to `rootfs/usr/local/ns/conf`
 2.  Run docker compose
 
-    NS_VARS="/usr/local/ns/conf/my_vars.tcl" docker-compose up
+        NS_VARS="/usr/local/ns/conf/my_vars.tcl" docker-compose up
 
 
 <a id="database-hostname"></a>
@@ -622,22 +420,13 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
     DB_PASS=foopass docker-compose up
 
 
-<a id="postgres-official-tag"></a>
+<a id="postgres-tag"></a>
 
-## Postgres official tag
+## Postgres tag
 
-`POSTGRES_OFFICIAL_TAG` set the docker image tag for [official postgres](https://hub.docker.com/_/postgres). Using only for `docker-compose-official-db.yaml`  Pay attention - some openacs version can use only correspond version of postgres.
+`POSTGRES_TAG` set the docker image tag for [official postgres](https://hub.docker.com/_/postgres).  Pay attention - some openacs version can use only correspond version of postgres.
 
-    POSTGRES_OFFICIAL_TAG="14.1-alpine" docker-compose up
-
-
-<a id="postgres-datacore-tag"></a>
-
-## Postgres datacore tag
-
-`POSTGRES_DATACORE_TAG` set the docker image tag for [datacore postgres](https://hub.docker.com/r/datacore/postgresql). Using only for `docker-compose.yaml`. Pay attention - some openacs version can use only correspond version of postgres.
-
-    POSTGRES_OFFICIAL_TAG="10.12" docker-compose up
+    POSTGRES_TAG="14.1-alpine" docker-compose up
 
 
 <a id="ci-cd"></a>

@@ -1,3 +1,9 @@
+CONTAINER_NAME='openacs-s6'
+NS_IMAGE_REPOSITORY='oupfiz5'
+NS_IMAGE_NAME='naviserver-s6'
 NS_IMAGE_TAG='4.99.23'
+IMAGE_NAME='openacs-s6'
+IMAGE_REPOSITORY='oupfiz5'
+IMAGE_TAG="${NS_IMAGE_TAG}"
 OACS_IMG_TAG='oacs-5-10-1'
 OACS_TAG='oacs-5-10'
