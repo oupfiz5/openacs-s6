@@ -2,8 +2,7 @@ version: '3.9'
 
 services:
   openacs:
-    image: oupfiz5/openacs-s6:${OACS_TAG}
-    restart: always
+    image: "oupfiz5/openacs-s6:${OACS_IMG_TAG}"
     env_file:
       - .env
     volumes:
@@ -20,7 +19,7 @@ services:
       retries: 2
 
   postgres:
-    image: postgres:${POSTGRES_OFFICIAL_TAG}
+    image: "${POSTGRES_REPOSITORY}:${POSTGRES_TAG}"
     restart: always
     env_file:
       - .env

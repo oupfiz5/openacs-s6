@@ -1,7 +1,7 @@
 #!/bin/bash
 # shellcheck disable=SC1091
-set -a; source ../VERSION ; set +a;
+set -a; source ../VERSIONS ; set +a;
 
-IMAGE="${IMAGE:-oupfiz5/openacs-s6:${VERSION}}"
+IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
 
 docker push "${IMAGE}"
