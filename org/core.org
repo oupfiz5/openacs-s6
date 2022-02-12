@@ -529,7 +529,7 @@ For debugging and maintenance purposes you may want access the containers shell.
             cd ${GITHUB_WORKSPACE}/tests
             .bats-battery/bats-core/bin/bats 02.dockerfile_check.bats
 
-        - name: Naviserver. Build. Check image and container.
+        - name: OpenACS. Build. Check image and container.
           run: |
             echo "::group::Build image"
             set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
