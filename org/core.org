@@ -377,7 +377,7 @@ For debugging and maintenance purposes you may want access the containers shell.
   NS_IMAGE_TAG="${NS_IMAGE_TAG:-20.04-3.0.0.2-4.99.23}"
   IMAGE_NAME="${IMAGE_NAME:-openacs-s6}"
   IMAGE_REPOSITORY="${IMAGE_REPOSITORY:-oupfiz5}"
-  IMAGE_TAG="${IMAGE_TAG:-s6v3-oacs-5-10-1}"
+  IMAGE_TAG="${IMAGE_TAG:-v3-oacs-5-10-1}"
   OACS_TAG="${OACS_TAG:-oacs-5-10}"
 #+end_src
 ** ../.fossil-settings/crlf-glob :code:
@@ -476,7 +476,7 @@ For debugging and maintenance purposes you may want access the containers shell.
           run: |
             echo "::group::Prepare environment"
             set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
-            export IMAGE_TAG="s6v2-oacs-5-10-1"
+            export IMAGE_TAG="v2-oacs-5-10-1"
             cd ${GITHUB_WORKSPACE}/src/hook
             echo "::endgroup::"
             echo "::group::Build image"
@@ -491,94 +491,93 @@ For debugging and maintenance purposes you may want access the containers shell.
 :CUSTOM_ID: ----github-workflows-test-yaml
 :END:
 #+begin_src yaml :shebang ""
-    name: Tests and Checks
+  name: Tests and Checks
 
-    # * Controls
-    # Controls when the action will run.
-    on:
-      push:
-        paths:
-          - '.github/*'
-          - '.github/workflows/*'
-          - 'src/*.sh'
-          - 'src/Dockerfile*'
-          - 'src/VERSIONS'
-          - 'src/hook/*'
-          - 'src/rootfs/**'
-          - 'tests/**'
-        branches-ignore:
-          - 'master'
-          - 'main'
-      pull_request:
-        paths:
-          - '.github/*'
-          - '.github/workflows/*'
-          - 'src/*.sh'
-          - 'src/Dockerfile*'
-          - 'src/VERSIONS'
-          - 'src/hook/*'
-          - 'src/rootfs/**'
-          - 'tests/**'
-        branches-ignore:
-          - 'master'
-          - 'main'
-      workflow_dispatch:
+  # * Controls
+  # Controls when the action will run.
+  on:
+    push:
+      paths:
+        - '.github/*'
+        - '.github/workflows/*'
+        - 'src/*.sh'
+        - 'src/Dockerfile*'
+        - 'src/VERSIONS'
+        - 'src/hook/*'
+        - 'src/rootfs/**'
+        - 'tests/**'
+      branches-ignore:
+        - 'master'
+        - 'main'
+    pull_request:
+      paths:
+        - '.github/*'
+        - '.github/workflows/*'
+        - 'src/*.sh'
+        - 'src/Dockerfile*'
+        - 'src/VERSIONS'
+        - 'src/hook/*'
+        - 'src/rootfs/**'
+        - 'tests/**'
+      branches-ignore:
+        - 'master'
+        - 'main'
+    workflow_dispatch:
 
-    # * Jobs
-    jobs:
-      checks:
-        name: Tests and Checks
-        runs-on: ubuntu-20.04
-        steps:
-          - name: Repo checkout
-            uses: actions/checkout@v2
+  # * Jobs
+  jobs:
+    checks:
+      name: Tests and Checks
+      runs-on: ubuntu-20.04
+      steps:
+        - name: Repo checkout
+          uses: actions/checkout@v2
 
-          - name: Check shell files (shellcheck)
-            run: |
-              sudo apt-get update -y
-              sudo apt-get install shellcheck
-              cd ${GITHUB_WORKSPACE}/tests
-              .bats-battery/bats-core/bin/bats 01.shellchecks.bats
+        - name: Check shell files (shellcheck)
+          run: |
+            sudo apt-get update -y
+            sudo apt-get install shellcheck
+            cd ${GITHUB_WORKSPACE}/tests
+            .bats-battery/bats-core/bin/bats 01.shellchecks.bats
 
-          - name: Check Dockerfile (hadolint)
-            run: |
-              cd ${GITHUB_WORKSPACE}/tests
-              .bats-battery/bats-core/bin/bats 02.dockerfile_check.bats
+        - name: Check Dockerfile (hadolint)
+          run: |
+            cd ${GITHUB_WORKSPACE}/tests
+            .bats-battery/bats-core/bin/bats 02.dockerfile_check.bats
 
-          - name: s6v3. OpenACS. Build. Check image and container.
-            run: |
-              echo "::group::Build image"
-              set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
-              echo "Build image"
-              cd ${GITHUB_WORKSPACE}/src/hook
-              ./build.sh
-              echo "::endgroup::"
-              echo "::group::Check image and container"
-              cd ${GITHUB_WORKSPACE}/tests
-              echo "Check docker image (dockle)"
-              .bats-battery/bats-core/bin/bats 03.docker_image_check.bats
-              echo "Check docker container"
-              .bats-battery/bats-core/bin/bats 04.container_check.bats
-              echo "::endgroup::"
+        - name: s6v3. OpenACS. Build. Check image and container.
+          run: |
+            echo "::group::Build image"
+            set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
+            echo "Build image"
+            cd ${GITHUB_WORKSPACE}/src/hook
+            ./build.sh
+            echo "::endgroup::"
+            echo "::group::Check image and container"
+            cd ${GITHUB_WORKSPACE}/tests
+            echo "Check docker image (dockle)"
+            .bats-battery/bats-core/bin/bats 03.docker_image_check.bats
+            echo "Check docker container"
+            .bats-battery/bats-core/bin/bats 04.container_check.bats
+            echo "::endgroup::"
 
-          - name: s6v2. OpenACS. Build. Check image and container.
-            run: |
-              echo "::group::Build image"
-              set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
-              export IMAGE_TAG="s6v2-oacs-5-10-1"
-              export IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
-              echo "Build image"
-              cd ${GITHUB_WORKSPACE}/src/hook
-              ./build.sh
-              echo "::endgroup::"
-              echo "::group::Check image and container"
-              cd ${GITHUB_WORKSPACE}/tests
-              echo "Check docker image (dockle)"
-              .bats-battery/bats-core/bin/bats 03.docker_image_check.bats
-              echo "Check docker container"
-              .bats-battery/bats-core/bin/bats 04.container_check.bats
-              echo "::endgroup::"
-
+        - name: s6v2. OpenACS. Build. Check image and container.
+          run: |
+            echo "::group::Build image"
+            set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
+            export IMAGE_TAG="v2-oacs-5-10-1"
+            export IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
+            echo "Build image"
+            cd ${GITHUB_WORKSPACE}/src/hook
+            ./build.sh
+            echo "::endgroup::"
+            echo "::group::Check image and container"
+            cd ${GITHUB_WORKSPACE}/tests
+            echo "Check docker image (dockle)"
+            .bats-battery/bats-core/bin/bats 03.docker_image_check.bats
+            echo "Check docker container"
+            .bats-battery/bats-core/bin/bats 04.container_check.bats
+            echo "::endgroup::"
 #+end_src
 ** ../.github/.trigger_on_push :code:
 :PROPERTIES:
@@ -1874,7 +1873,7 @@ Trigger: 10
   NS_CONF="${NS_CONF:-/usr/local/ns/conf/openacs-config.tcl}"
   OACS_REPOSITORY="${OACS_REPOSITORY:-oupfiz5}"
   OACS_IMAGE_NAME="${OACS_IMAGE_NAME:-openacs-s6}"
-  OACS_IMAGE_TAG="${OACS_IMAGE_TAG:-s6v3-oacs-5-10-1}"
+  OACS_IMAGE_TAG="${OACS_IMAGE_TAG:-v3-oacs-5-10-1}"
   OACS_LISTEN_PORT="${OACS_LISTEN_PORT:-8080}"
   oacs_httpport='8000'
   oacs_db_user="${PGUSER}"
