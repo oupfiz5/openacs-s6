@@ -578,7 +578,6 @@ For debugging and maintenance purposes you may want access the containers shell.
             echo "Check docker container"
             .bats-battery/bats-core/bin/bats 04.container_check.bats
             echo "::endgroup::"
-
 #+end_src
 ** ../.github/.trigger_on_push :code:
 :PROPERTIES:
