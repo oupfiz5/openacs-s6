@@ -377,7 +377,7 @@ For debugging and maintenance purposes you may want access the containers shell.
   NS_IMAGE_TAG="${NS_IMAGE_TAG:-20.04-3.0.0.2-4.99.23}"
   IMAGE_NAME="${IMAGE_NAME:-openacs-s6}"
   IMAGE_REPOSITORY="${IMAGE_REPOSITORY:-oupfiz5}"
-  IMAGE_TAG="${IMAGE_TAG:-s6v3-oacs-5-10-1}"
+  IMAGE_TAG="${IMAGE_TAG:-v3-oacs-5-10-1}"
   OACS_TAG="${OACS_TAG:-oacs-5-10}"
 #+end_src
 ** ../.fossil-settings/crlf-glob :code:
@@ -476,7 +476,7 @@ For debugging and maintenance purposes you may want access the containers shell.
           run: |
             echo "::group::Prepare environment"
             set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
-            export IMAGE_TAG="s6v2-oacs-5-10-1"
+            export IMAGE_TAG="v2-oacs-5-10-1"
             cd ${GITHUB_WORKSPACE}/src/hook
             echo "::endgroup::"
             echo "::group::Build image"
@@ -565,7 +565,7 @@ For debugging and maintenance purposes you may want access the containers shell.
           run: |
             echo "::group::Build image"
             set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
-            export IMAGE_TAG="s6v2-oacs-5-10-1"
+            export IMAGE_TAG="v2-oacs-5-10-1"
             export IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
             echo "Build image"
             cd ${GITHUB_WORKSPACE}/src/hook
@@ -1874,7 +1874,7 @@ Trigger: 10
   NS_CONF="${NS_CONF:-/usr/local/ns/conf/openacs-config.tcl}"
   OACS_REPOSITORY="${OACS_REPOSITORY:-oupfiz5}"
   OACS_IMAGE_NAME="${OACS_IMAGE_NAME:-openacs-s6}"
-  OACS_IMAGE_TAG="${OACS_IMAGE_TAG:-s6v3-oacs-5-10-1}"
+  OACS_IMAGE_TAG="${OACS_IMAGE_TAG:-v3-oacs-5-10-1}"
   OACS_LISTEN_PORT="${OACS_LISTEN_PORT:-8080}"
   oacs_httpport='8000'
   oacs_db_user="${PGUSER}"
