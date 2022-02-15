@@ -52,16 +52,32 @@ jobs:
           cd ${GITHUB_WORKSPACE}/tests
           .bats-battery/bats-core/bin/bats 02.dockerfile_check.bats
 
-      - name: Naviserver. Build. Check image and container.
+      - name: s6v3. OpenACS. Build. Check image and container.
         run: |
           echo "::group::Build image"
           set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
+          echo "Build image"
+          cd ${GITHUB_WORKSPACE}/src/hook
+          ./build.sh
+          echo "::endgroup::"
+          echo "::group::Check image and container"
+          cd ${GITHUB_WORKSPACE}/tests
+          echo "Check docker image (dockle)"
+          .bats-battery/bats-core/bin/bats 03.docker_image_check.bats
+          echo "Check docker container"
+          .bats-battery/bats-core/bin/bats 04.container_check.bats
+          echo "::endgroup::"
+
+      - name: s6v2. OpenACS. Build. Check image and container.
+        run: |
+          echo "::group::Build image"
+          set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
+          export IMAGE_TAG="s6v2-oacs-5-10-1"
           export IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
           echo "Build image"
           cd ${GITHUB_WORKSPACE}/src/hook
           ./build.sh
           echo "::endgroup::"
-
           echo "::group::Check image and container"
           cd ${GITHUB_WORKSPACE}/tests
           echo "Check docker image (dockle)"
