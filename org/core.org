@@ -281,7 +281,7 @@ docker-compose ps
 | [[*Timezone][TZ]]                  | UTC                | Set timezone, example Europe/Moscow |
 |---------------------+--------------------+-------------------------------------|
 
- * setting these variables as environment variables with the "oacs_" prefix (suitable for e.g. docker setups for =defaultConfig= in NS_CONF ([[https://bitbucket.org/naviserver/naviserver/commits/f9a919f8cb39fdf3b25fac67f5fde69f27c2a83a][see naviserver commit]])
+ * setting these variables as environment variables with the "oacs_" prefix (suitable for e.g. docker setups for =defaultConfig= in NS_CONF ([[https://bitbucket.org/naviserver/naviserver/commits/f9a919f8cb39fdf3b25fac67f5fde69f27c2a83a][see naviserver commit]]).
 
 All options have predifined values and store in =.env= file.
 ** Timezone
@@ -484,7 +484,7 @@ For debugging and maintenance purposes you may want access the containers shell.
           run: |
             echo "::group::Prepare environment"
             set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
-            export IMAGE_TAG="v2-oacs-5-10-1"
+            export IMAGE_TAG="v2-${OACS_TAG}"
             cd ${GITHUB_WORKSPACE}/src/hook
             echo "::endgroup::"
             echo "::group::Build image"
@@ -573,7 +573,7 @@ For debugging and maintenance purposes you may want access the containers shell.
           run: |
             echo "::group::Build image"
             set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
-            export IMAGE_TAG="v2-oacs-5-10"
+            export IMAGE_TAG="v2-${OACS_TAG}"
             export IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
             echo "Build image"
             cd ${GITHUB_WORKSPACE}/src/hook

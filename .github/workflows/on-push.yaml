@@ -56,7 +56,7 @@ jobs:
         run: |
           echo "::group::Prepare environment"
           set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
-          export IMAGE_TAG="v2-oacs-5-10-1"
+          export IMAGE_TAG="v2-${OACS_TAG}"
           cd ${GITHUB_WORKSPACE}/src/hook
           echo "::endgroup::"
           echo "::group::Build image"
