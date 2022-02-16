@@ -97,7 +97,7 @@ They are using for testing and scanning:
 
 You can download docker images from dockerhub:
 
-    docker pull oupfiz5/openacs-s6:oacs-5-10
+    docker pull oupfiz5/openacs-s6:v3-oacs-5-10
 
 
 <a id="build-from-github"></a>
@@ -149,6 +149,29 @@ You can download docker images from dockerhub:
 <td class="org-left">OACS_TAG</td>
 <td class="org-left">oacs-5-10</td>
 <td class="org-left">Set default OpenACS version</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="org-left">NS_IMAGE_TAG</td>
+<td class="org-left">20.04-3.0.0.2-4.99.23</td>
+<td class="org-left">Set default NaviServer version</td>
+</tr>
+</tbody>
+
+<tbody>
+<tr>
+<td class="org-left">NS_IMAGE_REPOSITORY</td>
+<td class="org-left">oupfiz5</td>
+<td class="org-left">Set default NaviServer trepository</td>
+</tr>
+
+
+<tr>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
+<td class="org-left">&#xa0;</td>
 </tr>
 </tbody>
 </table>

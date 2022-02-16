@@ -31,7 +31,7 @@ If you are reading this on GitHub, then you are looking at a Git mirror of the s
   - [[#build-from-chiselapp-fossil][Build from chiselapp (fossil)]]
   - [[#download-from-dockerhub][Download from DockerHub]]
   - [[#build-from-github][Build from GitHub]]
-  - [[#contfiguration][Contfiguration]]
+  - [[#configuration][Configuration]]
     - [[#build-arguments][Build arguments]]
     - [[#example-of-build][Example of build]]
 - [[#quickstart][Quickstart]]
@@ -47,7 +47,6 @@ If you are reading this on GitHub, then you are looking at a Git mirror of the s
   - [[#timezone][Timezone]]
   - [[#openacs-listen-port][OpenACS listen port]]
   - [[#naviserver-configuration-file][NaviServer configuration file]]
-  - [[#naviserver-variable-file][NaviServer variable file]]
   - [[#database-hostname][Database hostname]]
   - [[#database-username][Database username]]
   - [[#database-password][Database password]]
@@ -102,7 +101,7 @@ They are using for testing and scanning:
 :END:
 You can download docker images from dockerhub:
 #+begin_src sh :tangle no :noweb yes
-  docker pull oupfiz5/openacs-s6:oacs-5-10
+  docker pull oupfiz5/openacs-s6:v3-oacs-5-10
 #+end_src
 
 ** Build from GitHub
@@ -115,33 +114,46 @@ You can download docker images from dockerhub:
   docker build -t oupfiz5/openacs-s6 -f ./Dockerfile .
 #+end_src
 
-** Contfiguration
+** Configuration
 :PROPERTIES:
-:CUSTOM_ID: contfiguration
+:CUSTOM_ID: configuration
 :END:
 *** Build arguments
 :PROPERTIES:
 :CUSTOM_ID: build-arguments
 :END:
- |------------+-----------+-----------------------------|
- | Arguments  | Default   | Description                 |
- |------------+-----------+-----------------------------|
- | BUILD_DATE | none      | Set build date for label    |
- |------------+-----------+-----------------------------|
- | OACS_TAG   | oacs-5-10 | Set default OpenACS version |
- |------------+-----------+-----------------------------|
-
+ |---------------------+-----------------------+---------------------------|
+ | Arguments           | Default               | Description               |
+ |---------------------+-----------------------+---------------------------|
+ | BUILD_DATE          | none                  | Set build date for label  |
+ |---------------------+-----------------------+---------------------------|
+ | OACS_TAG            | oacs-5-10             | Set OpenACS version       |
+ |---------------------+-----------------------+---------------------------|
+ | NS_IMAGE_TAG        | 20.04-3.0.0.2-4.99.23 | Set NaviServer version    |
+ |---------------------+-----------------------+---------------------------|
+ | NS_IMAGE_REPOSITORY | oupfiz5               | Set NaviServer repository |
+ |---------------------+-----------------------+---------------------------|
+ | NS_IMAGE_NAME       | naviserver-s6         | Set NaviServer image name |
+ |---------------------+-----------------------+---------------------------|
+ | IMAGE_NAME          | openacs-s6            | Set OpenaACS image name   |
+ |---------------------+-----------------------+---------------------------|
+ | IMAGE_REPOSITORY    | oupfiz5               | Set OpenACS repository    |
+ |---------------------+-----------------------+---------------------------|
+ | IMAGE_TAG           | v3-oacs-5-10          | Set OpenACS image tag     |
+ |---------------------+-----------------------+---------------------------|
 *** Example of build
 :PROPERTIES:
 :CUSTOM_ID: example-of-build
 :END:
 #+begin_src sh :tangle no :noweb yes :dir ../src
-    docker build --no-cache \
-      --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
-      --build-arg OACS_TAG="oacs-5-10" \
-      -t oupfiz5/openacs-s6:oacs-5-10 \
-      -f ./Dockerfile \
-      .
+  set -a; source ../VERSIONS ; set +a;
+  IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
+  docker build --no-cache \
+         --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") \
+         --build-arg OACS_TAG="oacs-5-10" \
+         -t "${IMAGE}" \
+         -f ./Dockerfile \
+         .
 #+end_src
 
 * Quickstart
@@ -244,27 +256,34 @@ docker-compose ps
 :PROPERTIES:
 :CUSTOM_ID: general-options
 :END:
-|------------------+--------------------+-------------------------------------|
-| Option           | Default            | Description                         |
-|------------------+--------------------+-------------------------------------|
-| [[*Timezone][TZ]]               | UTC                | Set timezone, example Europe/Moscow |
-|------------------+--------------------+-------------------------------------|
-| [[*OpenACS listen port][OACS_LISTEN_PORT]] | 8080               | Set http listen port, example 8080  |
-|------------------+--------------------+-------------------------------------|
-| [[*NaviServer configuration file][NS_CONF]]          | openacs_config.tcl | Configuration file for NaviServer   |
-|------------------+--------------------+-------------------------------------|
-| [[*NaviServer variable file][NS_VARS]]          | config_vars.tcl    | Variable file for NaviServer        |
-|------------------+--------------------+-------------------------------------|
-| [[*Database hostname][DB_HOST]]          | postgres           | Database host name                  |
-|------------------+--------------------+-------------------------------------|
-| [[*Database username][DB_USER]]          | openacs            | Database user name                  |
-|------------------+--------------------+-------------------------------------|
-| [[*Database password][DB_PASS]]          | testing            | Database user password              |
-|------------------+--------------------+-------------------------------------|
-| [[#postgres-tag][POSTGRES_TAG]]     | 14.1-alpine        | Postgres image tag                  |
-|------------------+--------------------+-------------------------------------|
+|---------------------+--------------------+-------------------------------------|
+| Option              | Default            | Description                         |
+|---------------------+--------------------+-------------------------------------|
+| [[*NaviServer configuration file][NS_CONF]]             | openacs-config.tcl | Full path to configuration file     |
+| oacs_db_host*       | ${PGHOST}          | Set database host for OpenACS       |
+| oacs_db_name*       | ${PGDATABASE}      | Set database name for OpenACS       |
+| oacs_db_passwod*    | ${PGPASSWORD}      | Set db user password for OpenACS    |
+| oacs_db_port*       | ${PGPORT}          | Set database port for OpenACS       |
+| oacs_db_user*       | ${PGUSER}          | Set database user for OpenACS       |
+| oacs_httpport*      | 8000               | Set listen port for OpenACS         |
+| OACS_IMAGE_NAME**   | openacs-s6         | Set OpenACS image name              |
+| OACS_IMAGE_TAG**    | v3-oacs-5-10       | Set OpenACS image tag               |
+| oacs_ipaddress*     | 0.0.0.0            |            Set listen address for OpenACS                      |
+| [[*OpenACS listen port][OACS_LISTEN_PORT]]    | 8080               | Set http listen port, example 8080  |
+| OACS_REPOSITORY     | oupfiz5            | Set OpenACS repository name         |
+| PGDATABASE          | openacs            | Database name                       |
+| PGHOST              | postgres           | Database host name                  |
+| PGPASWORD           | testing            | Database user password              |
+| PGPORT              | 5432               | Database port                       |
+| PGUSER              | openacs            | Database user name                  |
+| POSTGRES_REPOSITORY | postgres           | Set default postgres repository     |
+| POSTGRES_TAG        | 14.1-alpine        | Set default postgres tag            |
+| [[*Timezone][TZ]]                  | UTC                | Set timezone, example Europe/Moscow |
+|---------------------+--------------------+-------------------------------------|
 
-All options have predifined values and store in file =.env= .
+ * setting these variables as environment variables with the "oacs_" prefix (suitable for e.g. docker setups for =defaultConfig= in NS_CONF ([[https://bitbucket.org/naviserver/naviserver/commits/f9a919f8cb39fdf3b25fac67f5fde69f27c2a83a][see naviserver commit]])
+
+All options have predifined values and store in =.env= file.
 ** Timezone
 :PROPERTIES:
 :CUSTOM_ID: timezone
@@ -293,42 +312,31 @@ Set the timezone for the containers, defaults to UTC. To set the timezone set th
   #+begin_src sh :tangle no :noweb yes :dir ../src/
   NS_CONF="/usr/local/ns/conf/my-config.tcl" docker-compose up
   #+end_src
-** NaviServer variable file
-:PROPERTIES:
-:CUSTOM_ID: naviserver-variable-file
-:END:
-=NS_VARS= - - configuration file. This configuration file contains several parameters which are frequently changed (e.g. for debug or other configurations). The provided NaviServer configuation file reads the variable file and uses its values.  Default value is =/usr/local/ns/conf/config_vars.tcl=
-1. Put the configuration file to =rootfs/usr/local/ns/conf=
-2. Run docker compose
-  #+begin_src sh :tangle no :noweb yes :dir ../src/
-    NS_VARS="/usr/local/ns/conf/my_vars.tcl" docker-compose up
-  #+end_src
-
 ** Database hostname
 :PROPERTIES:
 :CUSTOM_ID: database-hostname
 :END:
-=DB_HOST= set the database hostname for the openacs. By default it has name of docker-compose database  service - postgres.
+=PGHOST= set the database hostname for the openacs. By default it has name of docker-compose database  service - postgres.
   #+begin_src sh :tangle no :noweb yes :dir ../src/
-  DB_HOST=foo docker-compose up
+  DBHOST=foo docker-compose up
   #+end_src
 
 ** Database username
 :PROPERTIES:
 :CUSTOM_ID: database-username
 :END:
-=DB_USER= set the database username for the openacs and postgres.
+=PGUSER= set the database username for the openacs and postgres.
   #+begin_src sh :tangle no :noweb yes :dir ../src/
-    DB_USER=foouser docker-compose up
+    PGUSER=foouser docker-compose up
   #+end_src
 
 ** Database password
 :PROPERTIES:
 :CUSTOM_ID: database-password
 :END:
-=DB_PASS= set the database user password for the openacs and postgres.
+=PGPASSWORD= set the database user password for the openacs and postgres.
   #+begin_src sh :tangle no :noweb yes :dir ../src/
-    DB_PASS=foopass docker-compose up
+    PGPASSWORD=foopass docker-compose up
   #+end_src
 
 ** Postgres tag
@@ -377,7 +385,7 @@ For debugging and maintenance purposes you may want access the containers shell.
   NS_IMAGE_TAG="${NS_IMAGE_TAG:-20.04-3.0.0.2-4.99.23}"
   IMAGE_NAME="${IMAGE_NAME:-openacs-s6}"
   IMAGE_REPOSITORY="${IMAGE_REPOSITORY:-oupfiz5}"
-  IMAGE_TAG="${IMAGE_TAG:-v3-oacs-5-10-1}"
+  IMAGE_TAG="${IMAGE_TAG:-v3-oacs-5-10}"
   OACS_TAG="${OACS_TAG:-oacs-5-10}"
 #+end_src
 ** ../.fossil-settings/crlf-glob :code:
@@ -565,7 +573,7 @@ For debugging and maintenance purposes you may want access the containers shell.
           run: |
             echo "::group::Build image"
             set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
-            export IMAGE_TAG="v2-oacs-5-10-1"
+            export IMAGE_TAG="v2-oacs-5-10"
             export IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
             echo "Build image"
             cd ${GITHUB_WORKSPACE}/src/hook
@@ -1873,7 +1881,7 @@ Trigger: 10
   NS_CONF="${NS_CONF:-/usr/local/ns/conf/openacs-config.tcl}"
   OACS_REPOSITORY="${OACS_REPOSITORY:-oupfiz5}"
   OACS_IMAGE_NAME="${OACS_IMAGE_NAME:-openacs-s6}"
-  OACS_IMAGE_TAG="${OACS_IMAGE_TAG:-v3-oacs-5-10-1}"
+  OACS_IMAGE_TAG="${OACS_IMAGE_TAG:-v3-oacs-5-10}"
   OACS_LISTEN_PORT="${OACS_LISTEN_PORT:-8080}"
   oacs_httpport='8000'
   oacs_db_user="${PGUSER}"
