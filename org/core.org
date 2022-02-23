@@ -47,8 +47,8 @@ If you are reading this on GitHub, then you are looking at a Git mirror of the s
   - [[#oacs_-variables][oacs_* variables]]
   - [[#openacs-listen-port][OpenACS listen port]]
   - [[#openacs-docker-image][OpenACS docker image]]
-  -  [[#postgresql-docker-image][PostgreSQL docker image]]
   - [[#naviserver-configuration-file][NaviServer configuration file]]
+  - [[#postgresql-docker-image][PostgreSQL docker image]]
   - [[#database-hostname][Database hostname]]
   - [[#database-name][Database name]]
   - [[#database-username][Database username]]
@@ -86,7 +86,6 @@ They are using for testing and scanning:
 :PROPERTIES:
 :CUSTOM_ID: installation
 :END:
-
 ** Build from chiselapp (fossil)
 :PROPERTIES:
 :CUSTOM_ID: build-from-chiselapp--fossil-
@@ -351,18 +350,10 @@ Environment variables from .env file are:
 :PROPERTIES:
 :CUSTOM_ID: openacs-docker-image
 :END:
-In docker-compose is using the following variables for OpenACS image:
+Docker-compose uses the following variables for pulling OpenACS image from docker hub:
 - OACS_REPOSITORY
 - OACS_IMAGE_NAME
 - OACS_IMAGE_TAG
-
-**  PostgreSQL docker image
-:PROPERTIES:
-:CUSTOM_ID: postgresql-docker-image
-:END:
-In docker-compose is using the following variables for postgres image:
-- POSTGRES_REPOSITORY
-- POSTGRES_TAG
 
 ** NaviServer configuration file
 :PROPERTIES:
@@ -374,6 +365,14 @@ In docker-compose is using the following variables for postgres image:
   #+begin_src sh :tangle no :noweb yes :dir ../src/
    NS_CONF="/usr/local/ns/conf/my-config.tcl" docker-compose up
   #+end_src
+** PostgreSQL docker image
+:PROPERTIES:
+:CUSTOM_ID: postgresql-docker-image
+:END:
+Docker-compose uses the following variables for pulling postgres image from docker hub:
+- POSTGRES_REPOSITORY
+- POSTGRES_TAG
+
 ** Database hostname
 :PROPERTIES:
 :CUSTOM_ID: database-hostname
@@ -462,7 +461,7 @@ For debugging and maintenance purposes you may want access the containers shell.
   CONTAINER_NAME="${CONTAINER_NAME:-openacs-s6}"
   NS_IMAGE_REPOSITORY="${NS_IMAGE_REPOSITORY:-oupfiz5}"
   NS_IMAGE_NAME="${NS_IMAGE_NAME:-naviserver-s6}"
-  NS_IMAGE_TAG="${NS_IMAGE_TAG:-20.04-3.0.0.2-4.99.23}"
+  NS_IMAGE_TAG="${NS_IMAGE_TAG:-20.04-3.0.0.2-2-4.99.23}"
   IMAGE_NAME="${IMAGE_NAME:-openacs-s6}"
   IMAGE_REPOSITORY="${IMAGE_REPOSITORY:-oupfiz5}"
   IMAGE_TAG="${IMAGE_TAG:-v3-oacs-5-10}"
@@ -775,10 +774,12 @@ Trigger: 10
   #!/usr/bin/with-contenv bash
 
   until PGPASSWORD="${PGPASSWORD}" pg_isready -h "${PGHOST}" -U "${PGUSER}"; do
+      >&2 echo "Postgres db is unavailable - sleeping"
       sleep 1
   done
 
-  echo "PostgreSQL on host ${PGHOST} for db user ${PGUSER} is ready."
+  >&2 echo "Postgres is up - Starting OpenACS Now"
+  #echo "PostgreSQL on host ${PGHOST} for db user ${PGUSER} is ready."
 #+end_src
 
 ** rootfs/etc/services.d/naviserver/run :code:

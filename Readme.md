@@ -24,8 +24,8 @@
     -   [oacs\_\* variables](#oacs---variables)
     -   [OpenACS listen port](#openacs-listen-port)
     -   [OpenACS docker image](#openacs-docker-image)
-    -   [PostgreSQL docker image](#postgresql-docker-image)
     -   [NaviServer configuration file](#naviserver-configuration-file)
+    -   [PostgreSQL docker image](#postgresql-docker-image)
     -   [Database hostname](#database-hostname)
     -   [Database name](#database-name)
     -   [Database username](#database-username)
@@ -563,21 +563,11 @@ Environment variables from .env file are:
 
 ## OpenACS docker image
 
-In docker-compose is using the following variables for OpenACS image:
+Docker-compose uses the following variables for pulling OpenACS image from docker hub:
 
 -   OACS\_REPOSITORY
 -   OACS\_IMAGE\_NAME
 -   OACS\_IMAGE\_TAG
-
-
-<a id="postgresql-docker-image"></a>
-
-## PostgreSQL docker image
-
-In docker-compose is using the following variables for postgres image:
-
--   POSTGRES\_REPOSITORY
--   POSTGRES\_TAG
 
 
 <a id="naviserver-configuration-file"></a>
@@ -590,6 +580,16 @@ In docker-compose is using the following variables for postgres image:
 2.  Run docker compose
 
         NS_CONF="/usr/local/ns/conf/my-config.tcl" docker-compose up
+
+
+<a id="postgresql-docker-image"></a>
+
+## PostgreSQL docker image
+
+Docker-compose uses the following variables for pulling postgres image from docker hub:
+
+-   POSTGRES\_REPOSITORY
+-   POSTGRES\_TAG
 
 
 <a id="database-hostname"></a>
