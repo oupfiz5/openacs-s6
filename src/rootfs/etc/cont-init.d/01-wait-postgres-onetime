@@ -1,7 +1,9 @@
 #!/usr/bin/with-contenv bash
 
 until PGPASSWORD="${PGPASSWORD}" pg_isready -h "${PGHOST}" -U "${PGUSER}"; do
+    >&2 echo "Postgres db is unavailable - sleeping"
     sleep 1
 done
 
-echo "PostgreSQL on host ${PGHOST} for db user ${PGUSER} is ready."
+>&2 echo "Postgres is up - Starting OpenACS Now"
+#echo "PostgreSQL on host ${PGHOST} for db user ${PGUSER} is ready."
