@@ -51,17 +51,3 @@ jobs:
           echo "::group::Push image"
           ./push.sh
           echo "::endgroup::"
-
-      - name: s6v2. OpenACS. Build and push image.
-        run: |
-          echo "::group::Prepare environment"
-          set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
-          export IMAGE_TAG="v2-${OACS_TAG}"
-          cd ${GITHUB_WORKSPACE}/src/hook
-          echo "::endgroup::"
-          echo "::group::Build image"
-          ./build.sh
-          echo "::endgroup::"
-          echo "::group::Push image"
-          ./push.sh
-          echo "::endgroup::"

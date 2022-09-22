@@ -14,7 +14,7 @@ The setupfile contain global common property configuration:
 :PROPERTIES:
 :CUSTOM_ID: about
 :END:
-This is [[https://openacs.org/][OpenACS]] on [[https://hub.docker.com/_/ubuntu][Ubuntu base docker image]] (version 20.04) using [[https://github.com/just-containers/s6-overlay][s6-overlay]].  To install OpenACS I used  code from  [[https://github.com/gustafn/install-ns][Gustaf Neumann]] script [[https://github.com/gustafn/install-ns/blob/master/install-oacs.sh][install-oacs.sh]]. The base image is [[https://hub.docker.com/r/oupfiz5/openacs-s6][oupfiz5/openacs-s6]].
+This is [[https://openacs.org/][OpenACS]] on [[https://hub.docker.com/_/ubuntu][Ubuntu base docker image]] (version 22.04) using [[https://github.com/just-containers/s6-overlay][s6-overlay]].  To install OpenACS I used  code from  [[https://github.com/gustafn/install-ns][Gustaf Neumann]] script [[https://github.com/gustafn/install-ns/blob/master/install-oacs.sh][install-oacs.sh]]. The base image is [[https://hub.docker.com/r/oupfiz5/openacs-s6][oupfiz5/openacs-s6]].
 
 OpenACS-S6 is self-hosting at https://chiselapp.com/user/oupfiz5/repository/openacs-s6.
 
@@ -132,7 +132,7 @@ You can download docker images from dockerhub:
  |---------------------+-----------------------+---------------------------|
  | OACS_TAG            | oacs-5-10             | Set OpenACS version       |
  |---------------------+-----------------------+---------------------------|
- | NS_IMAGE_TAG        | 20.04-3.0.0.2-4.99.23 | Set NaviServer version    |
+ | NS_IMAGE_TAG        | 22.04-3.1.2.1-4.99.24 | Set NaviServer version    |
  |---------------------+-----------------------+---------------------------|
  | NS_IMAGE_REPOSITORY | oupfiz5               | Set NaviServer repository |
  |---------------------+-----------------------+---------------------------|
@@ -191,7 +191,7 @@ Clone repository from:
 :END:
 start:
 #+begin_src sh :tangle no :noweb yes :dir ../src/
-docker-compose up
+docker compose up
 #+end_src
 
 The site will be accessible by url  http://localhost:8080.
@@ -207,19 +207,19 @@ stop:
 :END:
 start :
 #+begin_src sh :tangle no :noweb yes :dir ../src/
-  docker-compose up -d
+  docker compose up -d
 #+end_src
 
 The site will be accessible by url  http://localhost:8080.
 
 stop:
 #+begin_src sh :tangle no :noweb yes :dir ../src/
-  docker-compose down
+  docker compose down
 #+end_src
 
 remove:
 #+begin_src sh :tangle no :noweb yes :dir ../src/
-  docker-compose rm
+  docker compose rm
 #+end_src
 
 *** View logs
@@ -228,19 +228,19 @@ remove:
 :END:
 Logs follow:
 #+begin_src sh :tangle no :noweb yes :dir ../src/
-  docker-compose logs -f
+  docker compose logs -f
 #+end_src
 
 Logs tail:
 #+begin_src sh :tangle no :noweb yes :dir ../src/
-  docker-compose logs --tail=10
+  docker compose logs --tail=10
 #+end_src
 *** View list containers
 :PROPERTIES:
 :CUSTOM_ID: view-list-containers
 :END:
 #+begin_src sh :tangle no :noweb yes :dir ../src/
-docker-compose ps
+docker compose ps
 #+end_src
 
 *** Prune all
@@ -461,7 +461,7 @@ For debugging and maintenance purposes you may want access the containers shell.
   CONTAINER_NAME="${CONTAINER_NAME:-openacs-s6}"
   NS_IMAGE_REPOSITORY="${NS_IMAGE_REPOSITORY:-oupfiz5}"
   NS_IMAGE_NAME="${NS_IMAGE_NAME:-naviserver-s6}"
-  NS_IMAGE_TAG="${NS_IMAGE_TAG:-20.04-3.1.0.1-4.99.23}"
+  NS_IMAGE_TAG="${NS_IMAGE_TAG:-22.04-3.1.2.1-4.99.24}"
   IMAGE_NAME="${IMAGE_NAME:-openacs-s6}"
   IMAGE_REPOSITORY="${IMAGE_REPOSITORY:-oupfiz5}"
   IMAGE_TAG="${IMAGE_TAG:-v3-oacs-5-10}"
@@ -558,20 +558,6 @@ For debugging and maintenance purposes you may want access the containers shell.
             echo "::group::Push image"
             ./push.sh
             echo "::endgroup::"
-
-        - name: s6v2. OpenACS. Build and push image.
-          run: |
-            echo "::group::Prepare environment"
-            set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
-            export IMAGE_TAG="v2-${OACS_TAG}"
-            cd ${GITHUB_WORKSPACE}/src/hook
-            echo "::endgroup::"
-            echo "::group::Build image"
-            ./build.sh
-            echo "::endgroup::"
-            echo "::group::Push image"
-            ./push.sh
-            echo "::endgroup::"
 #+end_src
 ** ../.github/workflows/test.yaml :code:
 :PROPERTIES:
@@ -647,24 +633,6 @@ For debugging and maintenance purposes you may want access the containers shell.
             echo "Check docker container"
             .bats-battery/bats-core/bin/bats 04.container_check.bats
             echo "::endgroup::"
-
-        - name: s6v2. OpenACS. Build. Check image and container.
-          run: |
-            echo "::group::Build image"
-            set -a; source ${GITHUB_WORKSPACE}/src/VERSIONS ; set +a;
-            export IMAGE_TAG="v2-${OACS_TAG}"
-            export IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
-            echo "Build image"
-            cd ${GITHUB_WORKSPACE}/src/hook
-            ./build.sh
-            echo "::endgroup::"
-            echo "::group::Check image and container"
-            cd ${GITHUB_WORKSPACE}/tests
-            echo "Check docker image (dockle)"
-            .bats-battery/bats-core/bin/bats 03.docker_image_check.bats
-            echo "Check docker container"
-            .bats-battery/bats-core/bin/bats 04.container_check.bats
-            echo "::endgroup::"
 #+end_src
 ** ../.github/.trigger_on_push :code:
 :PROPERTIES:
@@ -687,6 +655,8 @@ Trigger: 10
 :CUSTOM_ID: dockerfile
 :END:
 #+begin_src sh :shebang ""
+  # syntax=docker/dockerfile:1.4
+
   # * Arguments
   ARG \
       NS_IMAGE_REPOSITORY="${NS_IMAGE_REPOSITORY}" \
@@ -713,7 +683,7 @@ Trigger: 10
       org.opencontainers.image.url="https://chiselapp.com/user/oupfiz5/repository/openacs-s6/home" \
       org.opencontainers.image.documentation="https://chiselapp.com/user/oupfiz5/repository/openacs-s6/wiki" \
       org.opencontainers.image.source="https://chiselapp.com/user/oupfiz5/repository/openacs-s6/brlist" \
-      org.opencontainers.image.version="0.0.3d" \
+      org.opencontainers.image.version="0.0.4d" \
       org.opencontainers.image.revision="" \
       org.opencontainers.image.vendor="" \
       org.opencontainers.image.licenses="" \
@@ -856,6 +826,7 @@ Trigger: 10
       db_host	localhost
       db_port	""
       db_password	"testing"
+      CookieNamespace ad_
   }
 
   set servername		"New OpenACS Installation - Development"
@@ -1874,7 +1845,7 @@ Trigger: 10
   IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
   DOCKERFILE="${DOCKERFILE:-Dockerfile}"
 
-  docker build \
+  docker buildx build \
           --no-cache \
           --build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
           --build-arg NS_IMAGE_REPOSITORY="${NS_IMAGE_REPOSITORY}" \

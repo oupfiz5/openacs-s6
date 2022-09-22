@@ -7,7 +7,7 @@ set +a
 IMAGE="${IMAGE:-${IMAGE_REPOSITORY}/${IMAGE_NAME}:${IMAGE_TAG}}"
 DOCKERFILE="${DOCKERFILE:-Dockerfile}"
 
-docker build \
+docker buildx build \
         --no-cache \
         --build-arg BUILD_DATE="$(date -u +"%Y-%m-%dT%H:%M:%SZ")" \
         --build-arg NS_IMAGE_REPOSITORY="${NS_IMAGE_REPOSITORY}" \

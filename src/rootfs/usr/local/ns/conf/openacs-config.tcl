@@ -54,6 +54,7 @@ set defaultConfig {
     db_host	localhost
     db_port	""
     db_password	"testing"
+    CookieNamespace ad_
 }
 
 set servername		"New OpenACS Installation - Development"
