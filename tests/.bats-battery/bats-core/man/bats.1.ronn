@@ -49,10 +49,23 @@ OPTIONS
 
   * `-c`, `--count`:
     Count the number of test cases without running any tests
+  * `--code-quote-style <style>`:
+    A two character string of code quote delimiters or `custom`
+    which requires setting `$BATS_BEGIN_CODE_QUOTE` and 
+    `$BATS_END_CODE_QUOTE`. 
+    Can also be set via `$BATS_CODE_QUOTE_STYLE`.
   * `-f`, `--filter <regex>`:
     Filter test cases by names matching the regular expression
   * `-F`, `--formatter <type>`:
-    Switch between formatters: pretty (default), tap (default w/o term), tap13, junit
+    Switch between formatters: pretty (default), tap (default w/o term), tap13, junit,
+    `/<absolute path to formatter>`
+  * `--filter-status <status>`
+    Only run tests with the given status in the last completed (no CTRL+C/SIGINT) run.
+    Valid <status> values are:
+      failed - runs tests that failed or were not present in the last run
+      missed - runs tests that were not present in the last run
+  * `--gather-test-outputs-in <directory>`:
+    Gather the output of failing *and* passing tests as files in directory
   * `-h`, `--help`:
     Display this help message
   * `-j`, `--jobs <jobs>`:
@@ -69,15 +82,22 @@ OPTIONS
     Directory to write report files
   * `-p`, `--pretty`:
     Shorthand for "--formatter pretty"
+  * `--print-output-on-failure`:
+    Automatically print the value of `$output` on failed tests
   * `-r`, `--recursive`:
     Include tests in subdirectories
+  * `--show-output-of-passing-tests`
+    Print output of passing tests
   * `-t`, `--tap`:
     Shorthand for "--formatter tap"
   * `-T`, `--timing`:
     Add timing information to tests
+  * `-x`, `--trace`:
+    Print test commands as they are executed (like `set -x`)
+  * `--verbose-run`:
+    Make `run` print `$output` by default
   * `-v`, `--version`:
     Display the version number
-
 
 OUTPUT
 ------
