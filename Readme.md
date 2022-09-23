@@ -12,7 +12,7 @@
         -   [Build arguments](#build-arguments)
         -   [Example of build](#example-of-build)
 -   [Quickstart](#quickstart)
-    -   [Manage OpenACS using docker-compose](#manage-openacs-using-docker-compose)
+    -   [Manage OpenACS using docker compose](#manage-openacs-using-docker-compose)
         -   [Prerequisite](#prerequisite)
         -   [Start/stop interactive](#start-stop-interactive)
         -   [Start/stop/remove as daemon](#start-stop-remove-as-daemon)
@@ -227,7 +227,7 @@ You can download docker images from dockerhub:
 
 <a id="manage-openacs-using-docker-compose"></a>
 
-## Manage OpenACS using docker-compose
+## Manage OpenACS using docker compose
 
 
 <a id="prerequisite"></a>
@@ -557,7 +557,7 @@ Environment variables from .env file are:
 
 `OACS_LISTEN_PORT` set the http listen port for the openacs.  In this case the OpenACS is accessible by URL [http://localhost:8070](http://localhost:8070).
 
-    OACS_LISTEN_PORT=8070 docker-compose up
+    OACS_LISTEN_PORT=8070 docker compose up
 
 
 <a id="openacs-docker-image"></a>
@@ -599,7 +599,7 @@ Docker-compose uses the following variables for pulling postgres image from dock
 
 `PGHOST` set the database hostname for the openacs. By default it has name of docker-compose database  service - postgres.
 
-    PGHOST=foo docker-compose up
+    PGHOST=foo docker compose up
 
 
 <a id="database-name"></a>
@@ -608,7 +608,7 @@ Docker-compose uses the following variables for pulling postgres image from dock
 
 `PGDATABASE` set the database name for the openacs. By default it has name of docker-compose database  service - openacs.
 
-    PGDATABASE=foo docker-compose up
+    PGDATABASE=foo docker compose up
 
 
 <a id="database-username"></a>
@@ -617,7 +617,7 @@ Docker-compose uses the following variables for pulling postgres image from dock
 
 `PGUSER` set the database username for the openacs and postgres.
 
-    PGUSER=foouser docker-compose up
+    PGUSER=foouser docker compose up
 
 
 <a id="database-password"></a>
@@ -626,7 +626,7 @@ Docker-compose uses the following variables for pulling postgres image from dock
 
 `PGPASSWORD` set the database user password for the openacs and postgres.
 
-    PGPASSWORD=foopass docker-compose up
+    PGPASSWORD=foopass docker compose up
 
 
 <a id="postgres-tag"></a>
@@ -644,7 +644,7 @@ Docker-compose uses the following variables for pulling postgres image from dock
 
 Set the timezone for the containers, defaults to UTC. To set the timezone set the desired timezone with the variable TZ. Useful for setup correct time in logging.
 
-    TZ="Europe/Moscow" docker-compose up
+    TZ="Europe/Moscow" docker compose up
 
 
 <a id="ci-cd"></a>
