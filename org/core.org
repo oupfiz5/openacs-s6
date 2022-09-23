@@ -67,7 +67,8 @@ If you are reading this on GitHub, then you are looking at a Git mirror of the s
 :PROPERTIES:
 :CUSTOM_ID: tools
 :END:
-1. *nix operation system
+1. *nix operation
+    system
 2. Install Docker
 3. Install git (optional)
 4. Install fossil (optional)
