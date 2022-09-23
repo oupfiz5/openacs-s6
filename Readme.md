@@ -42,7 +42,7 @@
 
 # About
 
-This is [OpenACS](https://openacs.org/) on [Ubuntu base docker image](https://hub.docker.com/_/ubuntu) (version 20.04) using [s6-overlay](https://github.com/just-containers/s6-overlay).  To install OpenACS I used  code from  [Gustaf Neumann](https://github.com/gustafn/install-ns) script [install-oacs.sh](https://github.com/gustafn/install-ns/blob/master/install-oacs.sh). The base image is [oupfiz5/openacs-s6](https://hub.docker.com/r/oupfiz5/openacs-s6).
+This is [OpenACS](https://openacs.org/) on [Ubuntu base docker image](https://hub.docker.com/_/ubuntu) (version 22.04) using [s6-overlay](https://github.com/just-containers/s6-overlay).  To install OpenACS I used  code from  [Gustaf Neumann](https://github.com/gustafn/install-ns) script [install-oacs.sh](https://github.com/gustafn/install-ns/blob/master/install-oacs.sh). The base image is [oupfiz5/openacs-s6](https://hub.docker.com/r/oupfiz5/openacs-s6).
 
 OpenACS-S6 is self-hosting at <https://chiselapp.com/user/oupfiz5/repository/openacs-s6>.
 
@@ -58,7 +58,8 @@ If you are reading this on GitHub, then you are looking at a Git mirror of the s
 
 ## Tools
 
-1.  \*nix operation system
+1.  \*nix operation
+    system
 2.  Install Docker
 3.  Install git (optional)
 4.  Install fossil (optional)
@@ -158,7 +159,7 @@ You can download docker images from dockerhub:
 <tbody>
 <tr>
 <td class="org-left">NS_IMAGE_TAG</td>
-<td class="org-left">20.04-3.0.0.2-4.99.23</td>
+<td class="org-left">22.04-3.1.2.1-4.99.24</td>
 <td class="org-left">Set NaviServer version</td>
 </tr>
 </tbody>
@@ -254,7 +255,7 @@ Clone repository from:
 
 start:
 
-    docker-compose up
+    docker compose up
 
 The site will be accessible by url  <http://localhost:8080>.
 
@@ -269,17 +270,17 @@ stop:
 
 start :
 
-    docker-compose up -d
+    docker compose up -d
 
 The site will be accessible by url  <http://localhost:8080>.
 
 stop:
 
-    docker-compose down
+    docker compose down
 
 remove:
 
-    docker-compose rm
+    docker compose rm
 
 
 <a id="view-logs"></a>
@@ -288,18 +289,18 @@ remove:
 
 Logs follow:
 
-    docker-compose logs -f
+    docker compose logs -f
 
 Logs tail:
 
-    docker-compose logs --tail=10
+    docker compose logs --tail=10
 
 
 <a id="view-list-containers"></a>
 
 ### View list containers
 
-    docker-compose ps
+    docker compose ps
 
 
 <a id="prune-all"></a>
