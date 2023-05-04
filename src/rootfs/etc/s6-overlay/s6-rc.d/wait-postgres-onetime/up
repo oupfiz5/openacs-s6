@@ -1,0 +1,12 @@
+#!/command/execlineb -P
+
+with-contenv
+multisubstitute {
+    importas PGHOST PGHOST
+    importas PGPASSWORD PGPASSWORD
+    importas PGUSER PGUSER
+}
+
+#s6-setuidgid $USER
+foreground { echo "Calling wait-postgres-onetime.sh ..." }
+/etc/s6-overlay/scripts/wait-postgres-onetime.sh

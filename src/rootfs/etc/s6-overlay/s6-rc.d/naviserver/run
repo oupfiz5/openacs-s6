@@ -1,0 +1,10 @@
+#!/command/execlineb -P
+
+with-contenv
+multisubstitute {
+    define USER nsadmin
+    define NS_CMD "/usr/local/ns/bin/nsd"
+    importas NS_CONF NS_CONF
+}
+#s6-setuidgid $USER
+"${NS_CMD}" -f -t "${NS_CONF}" -u "${USER}"
