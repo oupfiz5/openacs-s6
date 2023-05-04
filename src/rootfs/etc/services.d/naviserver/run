@@ -1,6 +1,0 @@
-#!/usr/bin/with-contenv bash
-
-# Load functions
-source /etc/naviserver/functions
-
-exec s6-applyuidgid -u $(get_usermap_uid) -g $(get_usermap_gid) /usr/local/ns/bin/nsd -f -t ${NS_CONF}
